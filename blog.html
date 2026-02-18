@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — Kyle Vines</title>
+    <meta name="description" content="Writing about building software, document intelligence, and starting a company.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">kyle<span>.</span></a>
+            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/blog" class="active">Blog</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container container--narrow">
+            <h1>Blog<span>.</span></h1>
+            <p class="sub">Notes on building software, starting a company, and figuring things out in public.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container container--narrow">
+            <div class="post-list">
+                <a href="/blog/why-i-build" class="post-item">
+                    <div class="post-date">February 2026</div>
+                    <div class="post-title">Why I Build</div>
+                    <div class="post-excerpt">On starting Echology, building in public, and why document intelligence matters more than people think.</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="copy">&copy; 2026 Kyle Vines</div>
+            <div class="footer-links">
+                <a href="https://github.com/echology-io">GitHub</a>
+                <a href="https://echology.io">Echology</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
