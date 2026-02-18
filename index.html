@@ -3,90 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyle Vines — Builder, Engineer, Founder</title>
-    <meta name="description" content="Kyle Vines builds software that structures information. Founder of Echology. Creator of AECai and Decompose.">
+    <title>Kyle Vines</title>
+    <meta name="description" content="Kyle Vines — builder, thinker, founder. Software, faith, physics, ancient patterns, and the architecture of understanding.">
     <meta property="og:title" content="Kyle Vines">
-    <meta property="og:description" content="Builder, engineer, founder. Software that structures information.">
+    <meta property="og:description" content="Builder, thinker, founder. Connecting patterns across code, faith, physics, and ancient wisdom.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kylevines.com">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
-        <div class="container">
-            <a href="/" class="logo">kyle<span>.</span></a>
-            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
-            <div class="nav-links">
-                <a href="/" class="active">Home</a>
-                <a href="/about">About</a>
-                <a href="/blog">Blog</a>
-                <a href="/contact">Contact</a>
-            </div>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="container">
-            <h1>I build software that<br><span>structures information.</span></h1>
-            <p class="sub">Founder of Echology. Building AI tools for document intelligence, prediction markets, and the architecture of understanding.</p>
-            <div class="btn-group">
-                <a href="/about" class="btn btn-primary">About Me</a>
-                <a href="https://github.com/echology-io" class="btn btn-outline">GitHub</a>
-            </div>
-        </div>
-    </section>
+    <!-- The field: waves that live behind everything -->
+    <canvas id="field"></canvas>
 
-    <section>
-        <div class="container">
-            <p class="section-label">Projects</p>
-            <div class="card-grid">
-                <a href="https://echology.io" class="card" style="text-decoration:none">
-                    <div class="tag">Company</div>
-                    <h3>Echology</h3>
-                    <p>Simulation-aware intelligence tools. Local-first document processing. The parent company behind AECai and Decompose.</p>
-                    <span class="card-link">echology.io &rarr;</span>
-                </a>
-                <a href="https://aecai.io" class="card" style="text-decoration:none">
-                    <div class="tag">Platform</div>
-                    <h3>AECai</h3>
-                    <p>Document intelligence for Architecture, Engineering, and Construction. 17 simulation-aware systems. Full pipeline on your hardware.</p>
-                    <span class="card-link">aecai.io &rarr;</span>
-                </a>
-                <a href="https://echology.io/decompose" class="card" style="text-decoration:none">
-                    <div class="tag">Open Source</div>
-                    <h3>Decompose</h3>
-                    <p>The missing cognitive primitive for AI agents. Text in, classified semantic units out. No LLM required. Deterministic. Free.</p>
-                    <span class="card-link">Learn more &rarr;</span>
-                </a>
-            </div>
-        </div>
-    </section>
+    <div id="content">
 
-    <section>
-        <div class="container">
-            <p class="section-label">Writing</p>
-            <div class="post-list">
-                <a href="/blog/why-i-build" class="post-item">
-                    <div class="post-date">February 2026</div>
-                    <div class="post-title">Why I Build</div>
-                    <div class="post-excerpt">On starting Echology, building in public, and why document intelligence matters more than people think.</div>
-                </a>
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kyle<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/" class="active">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/blog">Blog</a>
+                    <a href="/contact">Contact</a>
+                </div>
             </div>
-            <div style="text-align:center; margin-top: 32px;">
-                <a href="/blog" class="btn btn-outline">All Posts</a>
-            </div>
-        </div>
-    </section>
+        </nav>
 
-    <footer>
-        <div class="container">
-            <div class="copy">&copy; 2026 Kyle Vines</div>
-            <div class="footer-links">
-                <a href="https://github.com/echology-io">GitHub</a>
-                <a href="https://echology.io">Echology</a>
-                <a href="/contact">Contact</a>
+        <div class="hero">
+            <div class="container">
+                <h1>Patterns are<br><span>everywhere.</span></h1>
+                <p class="sub">I build software, study systems, and look for the threads that connect things most people keep in separate rooms.</p>
+                <div class="btn-group">
+                    <a href="/blog" class="btn btn-primary">Read the Blog</a>
+                    <a href="/about" class="btn btn-outline">About Me</a>
+                </div>
             </div>
         </div>
-    </footer>
+
+        <div class="whisper">
+            <p id="whisper-text">Everything resonates. The work is learning where to listen.</p>
+        </div>
+
+        <div class="writing-section">
+            <div class="container container--narrow">
+                <p class="section-label">Writing</p>
+                <div class="writing-lead">Thinking out loud.</div>
+                <p class="writing-sub">Notes from the intersection of building, believing, and trying to understand how things actually work.</p>
+                <div class="post-list">
+                    <a href="/blog/why-i-build" class="post-item">
+                        <div class="post-date">February 2026</div>
+                        <div class="post-title">Why I Build</div>
+                        <div class="post-excerpt">On starting Echology, building in public, and why document intelligence matters more than people think.</div>
+                        <span class="read-more">Read &rarr;</span>
+                    </a>
+                </div>
+                <div style="text-align:center; margin-top: 36px;">
+                    <a href="/blog" class="btn btn-outline">All Posts</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="projects-section">
+            <div class="container">
+                <p class="section-label">Projects</p>
+                <div class="card-grid">
+                    <a href="https://echology.io" class="card" style="text-decoration:none">
+                        <div class="tag">Company</div>
+                        <h3>Echology</h3>
+                        <p>Simulation-aware intelligence tools. Local-first document processing. The parent company behind AECai and Decompose.</p>
+                        <span class="card-link">echology.io &rarr;</span>
+                    </a>
+                    <a href="https://aecai.io" class="card" style="text-decoration:none">
+                        <div class="tag">Platform</div>
+                        <h3>AECai</h3>
+                        <p>Document intelligence for Architecture, Engineering, and Construction. 17 simulation-aware systems. Full pipeline on your hardware.</p>
+                        <span class="card-link">aecai.io &rarr;</span>
+                    </a>
+                    <a href="https://echology.io/decompose" class="card" style="text-decoration:none">
+                        <div class="tag">Open Source</div>
+                        <h3>Decompose</h3>
+                        <p>The missing cognitive primitive for AI agents. Text in, classified semantic units out. No LLM required. Deterministic. Free.</p>
+                        <span class="card-link">Learn more &rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="https://echology.io">Echology</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+    (function() {
+        var canvas = document.getElementById('field');
+        var ctx = canvas.getContext('2d');
+        var W, H, dpr;
+        var mouse = { x: -9999, y: -9999 };
+        var t = 0;
+
+        // Wave lines — each is a horizontal waveform spanning the viewport
+        var NUM_WAVES = 28;
+        var waves = [];
+
+        function rand(a,b){ return Math.random()*(b-a)+a; }
+
+        function resize() {
+            dpr = window.devicePixelRatio || 1;
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W * dpr;
+            canvas.height = H * dpr;
+            canvas.style.width = W + 'px';
+            canvas.style.height = H + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function init() {
+            resize();
+            waves = [];
+            for (var i = 0; i < NUM_WAVES; i++) {
+                var norm = i / (NUM_WAVES - 1); // 0 to 1
+                waves.push({
+                    // Base Y position — evenly distributed across viewport
+                    baseY: 30 + norm * (H - 60),
+                    // Each wave is a sum of 2-3 sine components
+                    freq1: rand(0.002, 0.006),
+                    freq2: rand(0.001, 0.003),
+                    freq3: rand(0.0005, 0.0015),
+                    amp1: rand(3, 10),
+                    amp2: rand(5, 18),
+                    amp3: rand(2, 8),
+                    phase1: rand(0, Math.PI * 2),
+                    phase2: rand(0, Math.PI * 2),
+                    phase3: rand(0, Math.PI * 2),
+                    // Speed — how fast this wave's phase advances
+                    speed1: rand(0.008, 0.02),
+                    speed2: rand(0.004, 0.012),
+                    speed3: rand(0.002, 0.008),
+                    // Base opacity
+                    opacity: rand(0.04, 0.12),
+                });
+            }
+        }
+
+        function frame() {
+            t++;
+            ctx.clearRect(0, 0, W, H);
+
+            var scrollY = window.scrollY;
+
+            for (var i = 0; i < waves.length; i++) {
+                var w = waves[i];
+
+                // Advance phases
+                w.phase1 += w.speed1;
+                w.phase2 += w.speed2;
+                w.phase3 += w.speed3;
+
+                ctx.beginPath();
+
+                var step = 3; // px between points — smooth enough, fast enough
+                var prevY = 0;
+
+                for (var x = 0; x <= W; x += step) {
+                    // Composite waveform: sum of 3 sines at different frequencies
+                    var y1 = Math.sin(x * w.freq1 + w.phase1) * w.amp1;
+                    var y2 = Math.sin(x * w.freq2 + w.phase2) * w.amp2;
+                    var y3 = Math.sin(x * w.freq3 + w.phase3) * w.amp3;
+                    var waveY = w.baseY + y1 + y2 + y3;
+
+                    // Mouse influence: increase amplitude near cursor
+                    var dx = x - mouse.x;
+                    var dy = w.baseY - (mouse.y);
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 200) {
+                        var influence = (1 - dist / 200);
+                        // Amplify the wave displacement near cursor
+                        var boost = influence * 25;
+                        waveY = w.baseY + (y1 + y2 + y3) * (1 + influence * 2.5) +
+                                Math.sin(x * 0.015 + t * 0.06) * boost;
+                    }
+
+                    if (x === 0) {
+                        ctx.moveTo(x, waveY);
+                    } else {
+                        ctx.lineTo(x, waveY);
+                    }
+                }
+
+                // Determine color/opacity — brighter near mouse
+                var baseDy = Math.abs(w.baseY - mouse.y);
+                var mouseProximity = baseDy < 150 ? (1 - baseDy / 150) : 0;
+
+                var r = Math.round(30 + mouseProximity * 48);
+                var g = Math.round(30 + mouseProximity * 175);
+                var b = Math.round(42 + mouseProximity * 154);
+                var alpha = w.opacity + mouseProximity * 0.25;
+
+                ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+                ctx.lineWidth = 0.8 + mouseProximity * 0.6;
+                ctx.stroke();
+            }
+
+            // Whisper fade-in
+            var whisper = document.getElementById('whisper-text');
+            if (whisper) {
+                var wr = whisper.getBoundingClientRect();
+                if (wr.top < H * 0.85) whisper.classList.add('visible');
+            }
+
+            requestAnimationFrame(frame);
+        }
+
+        // ── Mouse ───────────────────────────────────────
+        window.addEventListener('mousemove', function(e) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        window.addEventListener('mouseleave', function() {
+            mouse.x = -9999;
+            mouse.y = -9999;
+        });
+        window.addEventListener('touchmove', function(e) {
+            if (e.touches.length) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        }, { passive: true });
+        window.addEventListener('touchend', function() {
+            mouse.x = -9999;
+            mouse.y = -9999;
+        });
+
+        // ── Init ────────────────────────────────────────
+        window.addEventListener('resize', function() { init(); });
+        init();
+        requestAnimationFrame(frame);
+    })();
+    </script>
+
 </body>
 </html>
