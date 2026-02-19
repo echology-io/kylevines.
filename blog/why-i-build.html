@@ -11,52 +11,78 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <nav>
-        <div class="container">
-            <a href="/" class="logo">kyle<span>.</span></a>
-            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/about">About</a>
-                <a href="/blog" class="active">Blog</a>
-                <a href="/contact">Contact</a>
+
+    <canvas id="field"></canvas>
+
+    <div id="content">
+
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kylevines<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/blog" class="active">Blog</a>
+                    <a href="/contact">Contact</a>
+                    <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <section class="article-header">
-        <div class="container container--narrow">
-            <div class="article-meta">February 2026</div>
-            <h1>Why I Build</h1>
-        </div>
-    </section>
-
-    <section class="article-body">
-        <div class="container container--narrow">
-            <p>This is a placeholder for your first blog post. Write about why you started Echology, what drives you to build, and where you're headed.</p>
-
-            <p>Some ideas to get started:</p>
-
-            <ul>
-                <li>The moment you realized document intelligence was an unsolved problem</li>
-                <li>Why local-first matters to you</li>
-                <li>What building in public looks like day to day</li>
-                <li>Where Echology, AECai, and Decompose are headed</li>
-            </ul>
-
-            <p>Replace this with your story.</p>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="copy">&copy; 2026 Kyle Vines</div>
-            <div class="footer-links">
-                <a href="https://github.com/echology-io">GitHub</a>
-                <a href="https://echology.io">Echology</a>
-                <a href="/contact">Contact</a>
+        <section class="article-header">
+            <div class="container container--narrow">
+                <div class="article-meta">February 2026</div>
+                <h1>Why I Build</h1>
             </div>
-        </div>
-    </footer>
+        </section>
+
+        <section class="article-body">
+            <div class="container container--narrow">
+                <p>This is a placeholder for your first blog post. Write about why you started Echology, what drives you to build, and where you're headed.</p>
+
+                <p>Some ideas to get started:</p>
+
+                <ul>
+                    <li>The moment you realized document intelligence was an unsolved problem</li>
+                    <li>Why local-first matters to you</li>
+                    <li>What building in public looks like day to day</li>
+                    <li>Where Echology, AECai, and Decompose are headed</li>
+                </ul>
+
+                <p>Replace this with your story.</p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="https://echology.io">Echology</a>
+                    <a href="https://aecai.io">AECai</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../field.js"></script>
+    <script>
+    function toggleMode() {
+        var isLight = document.body.classList.toggle('light');
+        var btn = document.querySelector('.mode-toggle');
+        btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+        localStorage.setItem('mode', isLight ? 'light' : 'dark');
+    }
+    (function() {
+        if (localStorage.getItem('mode') === 'light') {
+            document.body.classList.add('light');
+            var btn = document.querySelector('.mode-toggle');
+            if (btn) btn.innerHTML = '&#9788;';
+        }
+    })();
+    </script>
 </body>
 </html>
