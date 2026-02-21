@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Why I Build — Kyle Vines</title>
-    <meta name="description" content="On starting Echology, building in public, and why document intelligence matters more than people think.">
+    <meta name="description" content="On starting Echology, 13 years inside engineering firms, and why document intelligence matters more than people think.">
     <meta property="og:title" content="Why I Build">
-    <meta property="og:description" content="On starting Echology, building in public, and why document intelligence matters.">
+    <meta property="og:description" content="13 years inside engineering firms. Every one had the same problem: documents with legal weight being processed by people who didn't have time to read them.">
     <meta property="og:type" content="article">
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -39,18 +39,37 @@
 
         <section class="article-body">
             <div class="container container--narrow">
-                <p>This is a placeholder for your first blog post. Write about why you started Echology, what drives you to build, and where you're headed.</p>
+                <p>I spent 13 years inside engineering firms.</p>
 
-                <p>Some ideas to get started:</p>
+                <p>Designer. CAD manager. CEO of a geotechnical firm. I've sat in every seat. And every firm I worked at had the same problem: documents with legal weight being processed by people who didn't have time to read them.</p>
 
-                <ul>
-                    <li>The moment you realized document intelligence was an unsolved problem</li>
-                    <li>Why local-first matters to you</li>
-                    <li>What building in public looks like day to day</li>
-                    <li>Where Echology, AECai, and Decompose are headed</li>
-                </ul>
+                <p>Specifications with buried safety requirements. Contracts with liquidated damages hidden in boilerplate. Submittals where the compliance section looks identical to the marketing section.</p>
 
-                <p>Replace this with your story.</p>
+                <p>The people responsible for catching these things are good at their jobs. They're just buried. A project manager reviewing a 200-page specification doesn't have four hours to read every section with equal attention. They skim. They rely on experience. They catch most of it. But "most" isn't good enough when the thing you missed is a safety-critical requirement on page 147.</p>
+
+                <h2>The gap</h2>
+
+                <p>I watched teams get access to AI and immediately do the same thing: throw raw documents at a model and ask it to summarize. The model reads every section with equal attention. Background information gets the same compute as safety-critical requirements. The word "shall" gets treated the same as the word "typically."</p>
+
+                <p>Then they wonder why the output is unreliable.</p>
+
+                <p>The problem isn't the model. The problem is what you're feeding it. There's a structural step before reasoning that almost nobody is doing: classification. Before any document touches a model, it should be decomposed into classified semantic units. Each unit gets an authority level, a risk category, and an attention score.</p>
+
+                <p>Section 4 &mdash; Safety Requirements &mdash; scores 8.0. Section 6 &mdash; Background &mdash; scores 0.1. Now your model reads 30 pages instead of 200. And it reads the right 30 pages.</p>
+
+                <h2>What I built</h2>
+
+                <p>AECai is a 17-system document intelligence platform. Classification, decomposition, verification, retrieval, audit. Runs entirely on local hardware. No cloud. No data leaving the building. For the industries I serve &mdash; architecture, engineering, construction &mdash; that's not a preference, it's a requirement.</p>
+
+                <p>The core of it &mdash; the structural step that breaks text into classified semantic units &mdash; I open-sourced as <a href="https://echology.io/decompose">Decompose</a>. Free. Deterministic. No LLM required. Because the decomposition step teaches the architecture. If you understand what Decompose does, you understand the design pattern behind everything we build at <a href="https://echology.io">Echology</a>.</p>
+
+                <p>Structure before reasoning. Classification before generation. Deterministic preprocessing before probabilistic inference.</p>
+
+                <h2>Why now</h2>
+
+                <p>I'm building this from Charleston, SC. The tools I needed didn't exist, so I built them. The pattern I kept seeing &mdash; teams throwing raw content at AI and getting unreliable results &mdash; isn't going away. It's getting worse as adoption accelerates.</p>
+
+                <p>The answer isn't better models. The answer is better input. That's the gap I work in. That's why I build.</p>
             </div>
         </section>
 
