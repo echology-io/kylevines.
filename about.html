@@ -8,81 +8,115 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
-        <div class="container">
-            <a href="/" class="logo">kyle<span>.</span></a>
-            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/about" class="active">About</a>
-                <a href="/blog">Blog</a>
-                <a href="/contact">Contact</a>
-            </div>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="container container--narrow">
-            <h1>Builder, engineer,<br><span>founder.</span></h1>
-            <p class="sub">I build software that helps people understand complex information. Based in Charleston, South Carolina.</p>
-        </div>
-    </section>
+    <canvas id="field"></canvas>
 
-    <section>
-        <div class="container container--narrow">
-            <p class="section-label">Background</p>
-            <p class="section-desc" style="text-align:left; max-width:100%;">
-                I started Echology because I watched the same pattern repeat everywhere. Teams get access to powerful AI models and then throw raw, unstructured documents at them — because nobody showed them there's a structural step before reasoning begins.
-            </p>
-            <p class="section-desc" style="text-align:left; max-width:100%; margin-top: 16px;">
-                That gap — between raw content and structured intelligence — is where I work. I build the architecture that connects documents to understanding: classification, decomposition, verification, and audit.
-            </p>
-            <p class="section-desc" style="text-align:left; max-width:100%; margin-top: 16px;">
-                Everything I build runs locally. No cloud dependencies. No data leaving the building. For the industries I serve — architecture, engineering, construction — that's not a preference, it's a requirement.
-            </p>
-        </div>
-    </section>
+    <div id="content">
 
-    <section>
-        <div class="container container--narrow">
-            <p class="section-label">What I'm Building</p>
-            <div class="card-grid" style="grid-template-columns: 1fr;">
-                <div class="card">
-                    <h3>Echology</h3>
-                    <p>The company. Simulation-aware intelligence tools for professionals who need accuracy, accountability, and auditability. Not chatbots — intelligence infrastructure.</p>
-                </div>
-                <div class="card">
-                    <h3>AECai</h3>
-                    <p>Document intelligence platform for AEC firms. 17 simulation-aware systems, full processing pipeline, runs entirely on local hardware. The commercial product.</p>
-                </div>
-                <div class="card">
-                    <h3>Decompose</h3>
-                    <p>Open-source text decomposition library. The cognitive primitive that teaches document intelligence architecture. Free, deterministic, no LLM required. The on-ramp.</p>
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kylevines<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about" class="active">About</a>
+                    <a href="/blog">Blog</a>
+                    <a href="/contact">Contact</a>
+                    <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
                 </div>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <section>
-        <div class="container container--narrow" style="text-align:center;">
-            <p class="section-label">Connect</p>
-            <p class="section-desc">
-                <a href="https://github.com/echology-io">GitHub</a> &middot;
-                <a href="https://echology.io">Echology</a> &middot;
-                <a href="/contact">Contact</a>
-            </p>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="copy">&copy; 2026 Kyle Vines</div>
-            <div class="footer-links">
-                <a href="https://github.com/echology-io">GitHub</a>
-                <a href="https://echology.io">Echology</a>
-                <a href="/contact">Contact</a>
+        <section class="hero">
+            <div class="container container--narrow">
+                <h1>Builder, engineer,<br><span>founder.</span></h1>
+                <p class="sub">I build software that helps people understand complex information. Based in Charleston, South Carolina.</p>
             </div>
-        </div>
-    </footer>
+        </section>
+
+        <section class="writing-section">
+            <div class="container container--narrow">
+                <p class="section-label">Background</p>
+                <div class="article-body">
+                    <p>I started Echology because I watched the same pattern repeat everywhere. Teams get access to powerful AI models and then throw raw, unstructured documents at them — because nobody showed them there's a structural step before reasoning begins.</p>
+
+                    <p>That gap — between raw content and structured intelligence — is where I work. I build the architecture that connects documents to understanding: classification, decomposition, verification, and audit.</p>
+
+                    <p>Everything I build runs locally. No cloud dependencies. No data leaving the building. For the industries I serve — architecture, engineering, construction — that's not a preference, it's a requirement.</p>
+
+                    <h2>What I think about</h2>
+
+                    <p>I pull from everywhere. Quantum physics and string theory for how fields propagate. Christian faith for why things exist in the first place. Greek and ancient civilizations for what patterns endure across millennia. Space weather, disaster cycles, and astrology for how systems move at scales we barely track. Simulation theory for what the whole thing might actually be.</p>
+
+                    <p>None of these are separate to me. They're different frequencies of the same signal. The work is learning where to listen.</p>
+
+                    <h2>What I'm building</h2>
+                </div>
+
+                <div class="card-grid" style="grid-template-columns: 1fr;">
+                    <a href="https://echology.io" class="card" style="text-decoration:none">
+                        <div class="tag">Company</div>
+                        <h3>Echology</h3>
+                        <p>Deterministic intelligence tools for professionals who need accuracy, accountability, and auditability. Not chatbots — intelligence infrastructure.</p>
+                        <span class="card-link">echology.io &rarr;</span>
+                    </a>
+                    <a href="https://aecai.io" class="card" style="text-decoration:none">
+                        <div class="tag">Platform</div>
+                        <h3>AECai</h3>
+                        <p>Document intelligence for AEC firms. 17 simulation-aware systems, full processing pipeline, runs entirely on local hardware. The commercial product.</p>
+                        <span class="card-link">aecai.io &rarr;</span>
+                    </a>
+                    <a href="https://echology.io/decompose" class="card" style="text-decoration:none">
+                        <div class="tag">Open Source</div>
+                        <h3>Decompose</h3>
+                        <p>Deterministic text classification library. Extracted from AECai, released standalone. Free, no LLM required.</p>
+                        <span class="card-link">Learn more &rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container container--narrow" style="text-align:center; padding: 60px 0 80px;">
+                <p class="section-label">Connect</p>
+                <p style="color: var(--muted); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+                    <a href="https://github.com/echology-io">GitHub</a> &middot;
+                    <a href="https://echology.io">Echology</a> &middot;
+                    <a href="https://aecai.io">AECai</a> &middot;
+                    <a href="/contact">Contact</a>
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="https://echology.io">Echology</a>
+                    <a href="https://aecai.io">AECai</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="field.js"></script>
+    <script>
+    function toggleMode() {
+        var isLight = document.body.classList.toggle('light');
+        var btn = document.querySelector('.mode-toggle');
+        btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+        localStorage.setItem('mode', isLight ? 'light' : 'dark');
+    }
+    (function() {
+        if (localStorage.getItem('mode') === 'light') {
+            document.body.classList.add('light');
+            var btn = document.querySelector('.mode-toggle');
+            if (btn) btn.innerHTML = '&#9788;';
+        }
+    })();
+    </script>
 </body>
 </html>
