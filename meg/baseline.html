@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEG MVP Architecture - Kyle Vines</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --border: #2a2a2a;
+    --text: #e0e0e0;
+    --muted: #888;
+    --accent: #4ade80;
+    --accent2: #38bdf8;
+    --accent3: #f59e0b;
+    --code-bg: #1a1a1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem; }
+  h1 span { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 2.5rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin: 1.5rem 0 0.5rem 0;
+  }
+  h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent3);
+    margin: 1rem 0 0.25rem 0;
+  }
+  p { margin-bottom: 0.75rem; font-size: 0.92rem; }
+  ul, ol { margin: 0.5rem 0 1rem 1.5rem; font-size: 0.92rem; }
+  li { margin-bottom: 0.35rem; }
+  code {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.85rem;
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0 1rem 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 0.75rem 0;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin: 0.75rem 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  th { color: var(--accent); font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .phase-tag {
+    display: inline-block;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .p1 { background: #166534; color: #4ade80; }
+  .p2 { background: #1e3a5f; color: #38bdf8; }
+  .p3 { background: #78350f; color: #f59e0b; }
+  .diagram {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .callout {
+    border-left: 3px solid var(--accent3);
+    padding: 0.75rem 1rem;
+    background: rgba(245, 158, 11, 0.05);
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .callout strong { color: var(--accent3); }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<h1>Mira Energy Group - <span>MVP Architecture</span></h1>
+<p class="subtitle">CTO Technical Strategy Document | Kyle Vines | March 2026</p>
+
+<!-- ───────────────────────────────────────── -->
+<h2>1. Platform Overview</h2>
+
+<p>MEG is a software-first platform for decentralized peer-to-peer energy trading. The MVP proves four capabilities in a single integrated system:</p>
+
+<ol>
+  <li><strong>Permissioned blockchain settlement</strong> - auditable, immutable trade records on a purpose-built energy chain</li>
+  <li><strong>AI-optimized forecasting</strong> - demand/supply prediction enabling smarter trading decisions</li>
+  <li><strong>IoT data ingestion</strong> - real-time smart meter data flowing from edge devices to the platform</li>
+  <li><strong>Matching engine</strong> - automated order matching with transparent price discovery</li>
+</ol>
+
+<div class="callout">
+  <strong>Regulatory constraint:</strong> True P2P energy sales are blocked by utility franchise laws in most US jurisdictions. The MVP targets behind-the-meter scenarios (apartment complexes, campuses, microgrids) where these restrictions don't apply, or operates under a utility sandbox program.
+</div>
+
+<!-- ───────────────────────────────────────── -->
+<h2>2. System Architecture</h2>
+
+<div class="diagram">
+                         ┌─────────────────────────────┐
+                         │       PROSUMER DASHBOARD     │
+                         │    Next.js / React (PWA)     │
+                         │  Trade history, forecasts,   │
+                         │  energy balance, settings    │
+                         └──────────────┬──────────────┘
+                                        │ REST / WebSocket
+                         ┌──────────────▼──────────────┐
+                         │        BACKEND API           │
+                         │     Python (FastAPI)         │
+                         │                              │
+                         │  ┌─────────┐ ┌───────────┐  │
+                         │  │Matching │ │Settlement │  │
+                         │  │ Engine  │ │Orchestrator│  │
+                         │  └────┬────┘ └─────┬─────┘  │
+                         │       │             │        │
+                         │  ┌────▼────┐ ┌─────▼─────┐  │
+                         │  │Forecast │ │  Oracle    │  │
+                         │  │ Service │ │  Service   │  │
+                         │  └─────────┘ └───────────┘  │
+                         └───┬──────┬──────┬───────────┘
+                             │      │      │
+              ┌──────────────┘      │      └──────────────┐
+              │                     │                     │
+     ┌────────▼────────┐  ┌────────▼────────┐  ┌────────▼────────┐
+     │   PostgreSQL +   │  │     Redis       │  │  Energy Web     │
+     │   TimescaleDB    │  │   Cache / PubSub│  │  Chain (Volta)  │
+     │                  │  │                 │  │                 │
+     │ Users, orders,   │  │ Real-time state,│  │ Settlement      │
+     │ meter readings,  │  │ WebSocket feed, │  │ contracts,      │
+     │ forecasts,       │  │ rate limiting   │  │ trade records,  │
+     │ billing          │  │                 │  │ meter hashes,   │
+     └────────▲────────┘  └─────────────────┘  │ certificates    │
+              │                                 └─────────────────┘
+              │ MQTT
+     ┌────────┴────────────────────────────────┐
+     │            MQTT BROKER                   │
+     │     Mosquitto (dev) / AWS IoT (prod)     │
+     └────────────────────▲────────────────────┘
+                          │
+          ┌───────────────┼───────────────┐
+          │               │               │
+  ┌───────┴──────┐ ┌─────┴──────┐ ┌──────┴──────┐
+  │ Edge Node 1  │ │ Edge Node 2│ │ Edge Node N │
+  │ RPi4 + Python│ │            │ │             │
+  │ Modbus/REST  │ │            │ │             │
+  │ Smart Meter  │ │            │ │             │
+  └──────────────┘ └────────────┘ └─────────────┘</div>
+
+<!-- ───────────────────────────────────────── -->
+<h2>3. Technology Stack</h2>
+
+<table>
+  <tr><th>Layer</th><th>Technology</th><th>Rationale</th></tr>
+  <tr><td>Blockchain</td><td>Energy Web Chain (Solidity)</td><td>Purpose-built for energy, EVM-compatible, PoA consensus, Volta testnet free</td></tr>
+  <tr><td>Backend API</td><td>Python / FastAPI</td><td>ML ecosystem, async, fast dev cycle</td></tr>
+  <tr><td>Database</td><td>PostgreSQL + TimescaleDB</td><td>Single engine for relational + time-series, continuous aggregates</td></tr>
+  <tr><td>Cache / PubSub</td><td>Redis</td><td>Real-time state, WebSocket feed, rate limiting</td></tr>
+  <tr><td>Message Broker</td><td>MQTT (Mosquitto)</td><td>Industry standard IoT transport, lightweight pub/sub</td></tr>
+  <tr><td>ML Framework</td><td>XGBoost + scikit-learn</td><td>Fastest to production accuracy (~5% MAPE), interpretable</td></tr>
+  <tr><td>Edge Hardware</td><td>Raspberry Pi 4 + Eastron SDM630</td><td>~$100/node, Modbus TCP, well-documented</td></tr>
+  <tr><td>Frontend</td><td>Next.js (React)</td><td>SSR, PWA-capable, good DX</td></tr>
+  <tr><td>Infrastructure</td><td>Docker Compose (dev), AWS (prod)</td><td>Reproducible local dev, scalable prod</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2>4. Core Components</h2>
+
+<h3>4.1 Settlement Contract (Solidity / EWC)</h3>
+
+<p>The settlement contract is the centerpiece. Everything else feeds into or settles through it. On-chain records are minimal and auditable; heavy data stays off-chain.</p>
+
+<div class="grid">
+  <div class="card">
+    <h4>On-Chain</h4>
+    <ul>
+      <li>Trade records (seller, buyer, kWh, price, period)</li>
+      <li>Net settlement balances per participant per period</li>
+      <li>Energy attribute certificates (renewable proof)</li>
+      <li>Meter reading hashes (provenance, not raw data)</li>
+      <li>Market rules (price floor/ceiling, grid fees)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Off-Chain</h4>
+    <ul>
+      <li>Raw meter data (5-15s intervals, TimescaleDB)</li>
+      <li>Order book / bid-ask matching (latency-sensitive)</li>
+      <li>Weather and forecast data</li>
+      <li>User profiles, KYC</li>
+      <li>Real-time grid state</li>
+    </ul>
+  </div>
+</div>
+
+<pre><code>// Core settlement pattern (Solidity)
+contract P2PEnergyMarket {
+
+    struct MeterReading {
+        bytes32 meterDID;       // W3C DID of smart meter
+        uint256 periodId;       // Settlement period (15-min interval)
+        int256  netEnergyWh;    // Positive = export, Negative = import
+        bytes32 readingHash;    // Hash of raw data (stored off-chain)
+    }
+
+    struct Trade {
+        address seller;
+        address buyer;
+        uint256 energyWh;
+        uint256 pricePerWh;     // Smallest currency unit
+        uint256 periodId;
+    }
+
+    uint256 public constant SETTLEMENT_INTERVAL = 15 minutes;
+
+    // Metering data submitted by authorized oracle
+    mapping(uint256 => mapping(address => MeterReading)) public readings;
+
+    // Matched trades committed per settlement period
+    mapping(uint256 => Trade[]) public periodTrades;
+
+    function submitMeterReading(
+        bytes32 meterDID, uint256 periodId,
+        int256 netEnergyWh, bytes32 readingHash
+    ) external onlyAuthorizedAgent { ... }
+
+    function recordTrade(
+        address seller, address buyer,
+        uint256 energyWh, uint256 pricePerWh, uint256 periodId
+    ) external onlyMatchingEngine { ... }
+
+    function settle(uint256 periodId) external onlySettlementAgent {
+        // 1. Verify all meter readings submitted
+        // 2. Validate energy balance (exports ~ imports + losses)
+        // 3. Calculate net financial positions
+        // 4. Emit settlement events
+        // 5. Update balances
+    }
+}</code></pre>
+
+<h3>4.2 Matching Engine</h3>
+
+<p>Runs off-chain for performance. Two modes for the MVP:</p>
+
+<ul>
+  <li><strong>Merit-order auction:</strong> Sellers ranked by price (lowest first), buyers ranked by price (highest first). Trades matched until supply meets demand. Settlement price = clearing price.</li>
+  <li><strong>Bilateral matching:</strong> Prosumers set preferences (buy local solar first, cheapest first, greenest first). Engine matches based on preference + availability.</li>
+</ul>
+
+<p>Matched trades are batched and committed to the settlement contract at each 15-minute interval.</p>
+
+<h3>4.3 Forecasting Service</h3>
+
+<table>
+  <tr><th>Parameter</th><th>MVP Spec</th></tr>
+  <tr><td>Model</td><td>XGBoost (gradient boosted trees)</td></tr>
+  <tr><td>Horizon</td><td>24-hour ahead, 1-hour resolution</td></tr>
+  <tr><td>Features</td><td>hour, day_of_week, month, is_weekend, temperature, lag_1h, lag_24h, lag_168h, rolling_mean_24h</td></tr>
+  <tr><td>Data source</td><td>Smart meter history + OpenWeatherMap API</td></tr>
+  <tr><td>Training</td><td>3-6 months historical, retrain weekly</td></tr>
+  <tr><td>Target accuracy</td><td>&lt;8% MAPE (aggregated community load)</td></tr>
+  <tr><td>Serving</td><td>FastAPI endpoint, model serialized via joblib</td></tr>
+</table>
+
+<p>Phase 2 adds LSTM for multi-step horizons and solar PV generation forecasting with irradiance data.</p>
+
+<h3>4.4 IoT / Edge Pipeline</h3>
+
+<div class="diagram">
+Smart Meter          Edge Gateway           Broker              Platform
+(Modbus TCP)         (RPi4 + Python)        (MQTT)              (FastAPI)
+    │                     │                    │                    │
+    │── register read ───>│                    │                    │
+    │<── voltage, current,│                    │                    │
+    │    power, energy ───│                    │                    │
+    │                     │── publish ────────>│                    │
+    │                     │  topic:            │                    │
+    │                     │  meter/{id}/reading│── subscribe ──────>│
+    │                     │                    │                    │── validate
+    │                     │                    │                    │── store (TimescaleDB)
+    │                     │                    │                    │── aggregate (15-min)
+    │                     │                    │                    │── hash + submit
+    │                     │                    │                    │   to settlement
+    │   every 15 sec      │                    │                    │   contract</div>
+
+<p><strong>Data volumes:</strong> 100 meters at 15-sec intervals = ~23 MB/day raw. TimescaleDB continuous aggregates produce 15-min rollups automatically. Trivial at MVP scale.</p>
+
+<!-- ───────────────────────────────────────── -->
+<h2>5. Build Plan</h2>
+
+<h3>Phase 1: Foundation <span class="phase-tag p1">Months 1-2</span></h3>
+<div class="card">
+  <ul>
+    <li>Solidity settlement contract deployed to EWC Volta testnet</li>
+    <li>FastAPI backend: user management, meter data API, settlement orchestration</li>
+    <li>PostgreSQL + TimescaleDB schema: users, meters, readings, trades, settlements</li>
+    <li>MQTT ingest pipeline with simulated meter data (Python generator)</li>
+    <li>Basic matching engine (merit-order auction)</li>
+    <li>Unit tests for contract + API + matching logic</li>
+  </ul>
+  <p><strong>Deliverable:</strong> Working backend that accepts meter data, matches trades, and settles on-chain. No frontend yet - API only with test scripts.</p>
+</div>
+
+<h3>Phase 2: Intelligence + Interface <span class="phase-tag p2">Months 2-3</span></h3>
+<div class="card">
+  <ul>
+    <li>XGBoost forecasting model trained on public datasets (Pecan Street, UK CLNR)</li>
+    <li>Forecast API endpoint integrated with matching engine (forecast-informed bidding)</li>
+    <li>Edge gateway prototype: RPi4 + Eastron SDM630 submeter reading real data</li>
+    <li>Next.js prosumer dashboard: energy balance, trade history, forecast visualization</li>
+    <li>WebSocket real-time feed via Redis pub/sub</li>
+    <li>Oracle service: automated meter hash submission to settlement contract</li>
+  </ul>
+  <p><strong>Deliverable:</strong> End-to-end demo. Real meter data flows from edge to dashboard, trades match and settle on-chain, forecasts inform the market.</p>
+</div>
+
+<h3>Phase 3: Pilot Prep <span class="phase-tag p3">Months 3-4</span></h3>
+<div class="card">
+  <ul>
+    <li>Identify pilot site (behind-the-meter: apartment complex, campus, co-housing)</li>
+    <li>Edge hardware deployment (10 nodes, ~$1,000-1,500)</li>
+    <li>Utility/regulatory conversations for sandbox participation</li>
+    <li>Security audit: smart contract review, API hardening, edge device auth</li>
+    <li>Investor demo: full platform walkthrough with live data</li>
+    <li>EWC mainnet deployment or Hyperledger Besu private chain (if utility requires)</li>
+  </ul>
+  <p><strong>Deliverable:</strong> Fundable MVP. Live pilot site, real data, on-chain settlement, investor deck backed by working product.</p>
+</div>
+
+<!-- ───────────────────────────────────────── -->
+<h2>6. Infrastructure Cost (6-Month MVP)</h2>
+
+<table>
+  <tr><th>Item</th><th>Cost</th></tr>
+  <tr><td>Cloud hosting (API + DB + MQTT)</td><td>$100-300/mo</td></tr>
+  <tr><td>EWC Volta testnet</td><td>Free</td></tr>
+  <tr><td>Edge hardware (10 pilot nodes)</td><td>$1,000-1,500 one-time</td></tr>
+  <tr><td>Weather API (OpenWeatherMap)</td><td>Free tier</td></tr>
+  <tr><td>Smart meter dataset (Pecan Street)</td><td>~$500/yr</td></tr>
+  <tr><td>Domain + misc</td><td>$50/mo</td></tr>
+  <tr><td><strong>Total (6 months, excl. labor)</strong></td><td><strong>$3,000 - $5,000</strong></td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2>7. Regulatory Strategy</h2>
+
+<h3>Why Behind-the-Meter First</h3>
+<p>Utility franchise laws prevent direct retail P2P energy sales in most US jurisdictions. FERC Order 2222 enables DER aggregation in wholesale markets but does not authorize retail P2P trading. The fastest path to a real pilot:</p>
+
+<ol>
+  <li><strong>Behind-the-meter</strong> - multi-tenant buildings, campuses, industrial parks. Utility jurisdiction is limited. Prosumers trade within a shared meter boundary.</li>
+  <li><strong>Utility sandbox</strong> - NY REV, TX deregulated market, CA community microgrid programs offer regulatory sandboxes for innovative energy projects.</li>
+  <li><strong>Bill credits</strong> - structure trades as bill credits (like community solar) rather than direct energy sales. Avoids franchise issues.</li>
+  <li><strong>Energy certificates</strong> - trade RECs/EACs on-chain as a parallel revenue stream that sidesteps energy sales regulation entirely.</li>
+</ol>
+
+<h3>Favorable Pilot Markets</h3>
+<table>
+  <tr><th>State</th><th>Advantage</th><th>Path</th></tr>
+  <tr><td>Texas (ERCOT)</td><td>Deregulated retail, no utility monopoly</td><td>Partner with existing REP or become one</td></tr>
+  <tr><td>New York</td><td>REV program, VDER tariff, CDG framework</td><td>Utility sandbox, community DG</td></tr>
+  <tr><td>California</td><td>NEM 3.0 makes P2P more attractive</td><td>Rule 21, community microgrids</td></tr>
+  <tr><td>Hawaii</td><td>$0.40+/kWh, islanded grid</td><td>Strong economic case, HECO DER programs</td></tr>
+  <tr><td>Colorado</td><td>Favorable DER legislation</td><td>Xcel transactive energy pilots</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2>8. Competitive Landscape</h2>
+
+<table>
+  <tr><th>Platform</th><th>Status</th><th>Lesson</th></tr>
+  <tr><td>Power Ledger</td><td>Most commercial traction, Solana-based chain</td><td>Utility partnership for meter access is non-negotiable. Token models create friction.</td></tr>
+  <tr><td>LO3 / Brooklyn Microgrid</td><td>Pivoted. Trades were largely symbolic.</td><td>Great PR, but regulatory constraints made trading virtual. Need path from pilot to scale.</td></tr>
+  <tr><td>Siemens Pebbles</td><td>Pilot complete, limited commercial follow-through</td><td>Even favorable regulation (Germany) doesn't solve unit economics. Grid fees dominate.</td></tr>
+  <tr><td>Energy Web Foundation</td><td>Active ecosystem, 100+ affiliates</td><td>Technology works. Bottleneck is regulatory and business model, not tech.</td></tr>
+  <tr><td>WePower</td><td>Struggled post-ICO</td><td>Tokenized energy futures work for wholesale/corporate PPA, not retail P2P.</td></tr>
+  <tr><td>SonnenCommunity</td><td>Commercially successful (acquired by Shell)</td><td>Behind-the-meter battery sharing works. Licensed energy supplier model avoids regulatory issues.</td></tr>
+</table>
+
+<div class="callout">
+  <strong>Key insight:</strong> No previous attempt has failed because of technology. Every failure traces back to regulatory barriers or unsustainable business models. MEG's technical architecture must be paired with a viable regulatory strategy from day one.
+</div>
+
+<!-- ───────────────────────────────────────── -->
+<h2>9. Technical Risks</h2>
+
+<table>
+  <tr><th>Risk</th><th>Impact</th><th>Mitigation</th></tr>
+  <tr><td>EWC ecosystem changes or deprecation</td><td>High</td><td>Write portable Solidity. Can deploy to Besu or any EVM chain.</td></tr>
+  <tr><td>Utility refuses meter data access</td><td>High</td><td>Deploy own submeters (Eastron SDM630). Behind-the-meter doesn't need utility cooperation.</td></tr>
+  <tr><td>Regulatory blocks pilot</td><td>High</td><td>Start behind-the-meter. Structure as bill credits or certificate trading.</td></tr>
+  <tr><td>Forecast accuracy insufficient</td><td>Medium</td><td>XGBoost baseline is proven. Ensemble with LSTM if needed. Market works without forecasts (they optimize, not enable).</td></tr>
+  <tr><td>Edge device reliability</td><td>Medium</td><td>Local buffering on RPi. MQTT QoS 1 ensures delivery. Watchdog process auto-restarts.</td></tr>
+  <tr><td>Smart contract vulnerability</td><td>High</td><td>Formal audit before mainnet. Use OpenZeppelin patterns. Permissioned chain limits attack surface.</td></tr>
+</table>
+
+<!-- ───────────────────────────────────────── -->
+<h2>10. What Makes This Defensible</h2>
+
+<ul>
+  <li><strong>Auditable settlement on a purpose-built energy chain</strong> - not a database with a blockchain label. Every trade is verifiable, immutable, and transparent to regulators.</li>
+  <li><strong>Deterministic-first architecture</strong> - AI optimizes but doesn't gatekeep. The market works without the forecast. The forecast makes it work better.</li>
+  <li><strong>Edge-to-chain data integrity</strong> - meter readings hashed at the edge, verified on-chain. Tamper-evident from source to settlement.</li>
+  <li><strong>Portable contracts</strong> - Solidity on EVM means we're not locked to any single chain. If a utility demands Besu, we deploy to Besu. If regulation favors public chains, we bridge.</li>
+  <li><strong>Regulatory-aware design</strong> - behind-the-meter first, bill credits as fallback, certificate trading as parallel revenue. Built to work within constraints, not around them.</li>
+</ul>
+
+<div class="footer">
+  <p>Prepared by Kyle Vines | Echology, Inc. | March 2026</p>
+  <p>This document is confidential and intended for MEG executive team and investors.</p>
+</div>
+
+</body>
+</html>
