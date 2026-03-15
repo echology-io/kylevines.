@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Map — Kyle Vines</title>
+<meta name="description" content="The complete architecture of echology — every function, connection, strategy, and task mapped as a single system.">
+<link rel="stylesheet" href="style.css">
+<style>
+  :root {
+    --bg: #080b12;
+    --bg-card: #0c1018;
+    --fg: #ccc8bc;
+    --accent: #2a8c58;
+    --accent-dim: #1d6040;
+    --amber: #9a6828;
+    --gold: #c8a84e;
+    --muted: #5a6070;
+    --border: #161c28;
+    --red: #8c3a3a;
+    --blue: #3a5a8c;
+    --purple: #6a4a8c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.5;
+    padding: 0;
+  }
+  .map-content { padding: 40px; }
+  h1 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin: 48px 0 20px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 40px;
+    max-width: 700px;
+    line-height: 1.6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* Diagram containers */
+  .diagram { margin: 24px 0 48px; overflow-x: auto; }
+  .diagram svg { display: block; }
+
+  /* Legend */
+  .legend { display: flex; gap: 24px; flex-wrap: wrap; margin: 16px 0 32px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.1); }
+
+  /* Stats bar */
+  .stats { display: flex; gap: 32px; flex-wrap: wrap; margin: 24px 0 40px; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--accent); display: block; }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+
+  /* Detail tables */
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0 40px; }
+  .detail-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 2px;
+  }
+  .detail-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  .detail-card .tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--amber);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .detail-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  .detail-card ul {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .detail-card li {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 2px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  .detail-card li::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--accent); border-radius: 1px; margin-right: 8px; opacity: 0.4; }
+  .detail-card .metric { color: var(--accent); font-weight: 600; }
+  .section-note {
+    font-size: 11px;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="container">
+        <a href="/" class="logo">kylevines<span>.</span></a>
+        <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/blog">Blog</a>
+            <a href="/machine-map" class="active">Machine Map</a>
+            <a href="/contact">Contact</a>
+            <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
+        </div>
+    </div>
+</nav>
+
+<div class="map-content">
+
+<h1>Echology Machine Map</h1>
+<p class="subtitle">Every function, connection, strategy, and task mapped as a single system. The factory floor of echology.io. Generated 2026-03-15.</p>
+
+<div class="stats">
+  <div class="stat"><span class="stat-num">11</span><span class="stat-label">Projects</span></div>
+  <div class="stat"><span class="stat-num">~40K</span><span class="stat-label">Lines of Code</span></div>
+  <div class="stat"><span class="stat-num">700+</span><span class="stat-label">Tests</span></div>
+  <div class="stat"><span class="stat-num">84</span><span class="stat-label">API Routes</span></div>
+  <div class="stat"><span class="stat-num">30+</span><span class="stat-label">Agent Skills</span></div>
+  <div class="stat"><span class="stat-num">14</span><span class="stat-label">DB Tables</span></div>
+  <div class="stat"><span class="stat-num">8</span><span class="stat-label">Docker Services</span></div>
+  <div class="stat"><span class="stat-num">2</span><span class="stat-label">Machines</span></div>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: LAYER ARCHITECTURE                                 -->
+<!-- ============================================================ -->
+
+<p class="section-note">Architecture</p>
+<h2>Layer Stack — Dependency Chain</h2>
+<p class="subtitle">Everything flows one direction. No layer depends on anything above it. decompose depends on nothing.</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#2a8c58;"></div>Foundation (L0)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#3a5a8c;"></div>Platform (L1)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#9a6828;"></div>Operations (L2)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#6a4a8c;"></div>Verticals (L3)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#8c3a3a;"></div>External / Personal</div>
+</div>
+
+<div class="diagram">
+<svg width="1100" height="520" viewBox="0 0 1100 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- L0: decompose -->
+  <rect x="360" y="420" width="380" height="70" rx="4" fill="#2a8c58" fill-opacity="0.12" stroke="#2a8c58" stroke-width="2"/>
+  <text x="550" y="448" text-anchor="middle" fill="#2a8c58" font-size="14" font-weight="700" font-family="SF Mono, monospace">DECOMPOSE</text>
+  <text x="550" y="466" text-anchor="middle" fill="#5a6070" font-size="10" font-family="SF Mono, monospace">L0 — Deterministic Foundation — PyPI — 4,837 LOC — 63 tests — Zero deps</text>
+  <text x="550" y="480" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">classify() · decompose_text() · filter_for_llm() · 6 authority · 7 risk · MCP server</text>
+
+  <!-- L1: engine -->
+  <rect x="280" y="300" width="540" height="80" rx="4" fill="#3a5a8c" fill-opacity="0.12" stroke="#3a5a8c" stroke-width="2"/>
+  <text x="550" y="328" text-anchor="middle" fill="#3a5a8c" font-size="14" font-weight="700" font-family="SF Mono, monospace">ENGINE</text>
+  <text x="550" y="346" text-anchor="middle" fill="#5a6070" font-size="10" font-family="SF Mono, monospace">L1 — Shared Intelligence — ~15,000 LOC — 19 domain seams — 70% universal</text>
+  <!-- Three sub-engines -->
+  <rect x="296" y="354" width="140" height="18" rx="2" fill="#3a5a8c" fill-opacity="0.15" stroke="#3a5a8c" stroke-width="1"/>
+  <text x="366" y="367" text-anchor="middle" fill="#ccc8bc" font-size="9" font-family="SF Mono, monospace">VANTA (Perceive)</text>
+  <rect x="450" y="354" width="140" height="18" rx="2" fill="#3a5a8c" fill-opacity="0.15" stroke="#3a5a8c" stroke-width="1"/>
+  <text x="520" y="367" text-anchor="middle" fill="#ccc8bc" font-size="9" font-family="SF Mono, monospace">ALETHEIA (Verify)</text>
+  <rect x="604" y="354" width="140" height="18" rx="2" fill="#3a5a8c" fill-opacity="0.15" stroke="#3a5a8c" stroke-width="1"/>
+  <text x="674" y="367" text-anchor="middle" fill="#ccc8bc" font-size="9" font-family="SF Mono, monospace">DAEDALUS (Act)</text>
+
+  <!-- Arrow L0 → L1 -->
+  <line x1="550" y1="420" x2="550" y2="380" stroke="#2a8c58" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.4"/>
+  <polygon points="546,384 550,376 554,384" fill="#2a8c58" opacity="0.4"/>
+
+  <!-- L2: ops -->
+  <rect x="200" y="190" width="700" height="70" rx="4" fill="#9a6828" fill-opacity="0.12" stroke="#9a6828" stroke-width="2"/>
+  <text x="550" y="218" text-anchor="middle" fill="#9a6828" font-size="14" font-weight="700" font-family="SF Mono, monospace">OPS</text>
+  <text x="550" y="236" text-anchor="middle" fill="#5a6070" font-size="10" font-family="SF Mono, monospace">L2 — Command Center — Dashboard · Agent · 14 tables · 30+ skills · Training · CLI</text>
+  <text x="550" y="250" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">CRM · Financial · Content · Corpus · Scoring · Email · Invoices · Citations · Calendar</text>
+
+  <!-- Arrow L1 → L2 -->
+  <line x1="550" y1="300" x2="550" y2="264" stroke="#3a5a8c" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.4"/>
+  <polygon points="546,268 550,260 554,268" fill="#3a5a8c" opacity="0.4"/>
+
+  <!-- L3: Verticals -->
+  <!-- aecai -->
+  <rect x="40" y="50" width="220" height="100" rx="4" fill="#6a4a8c" fill-opacity="0.12" stroke="#6a4a8c" stroke-width="2"/>
+  <text x="150" y="78" text-anchor="middle" fill="#6a4a8c" font-size="13" font-weight="700" font-family="SF Mono, monospace">AECai</text>
+  <text x="150" y="94" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">AEC Vertical — v3.1.0</text>
+  <text x="150" y="108" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">84 routes · 6 workflows</text>
+  <text x="150" y="122" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">569 tests · Port 8443</text>
+  <text x="150" y="136" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">FastAPI + Temporal + Qdrant</text>
+
+  <!-- geode -->
+  <rect x="280" y="50" width="220" height="100" rx="4" fill="#6a4a8c" fill-opacity="0.12" stroke="#6a4a8c" stroke-width="2"/>
+  <text x="390" y="78" text-anchor="middle" fill="#6a4a8c" font-size="13" font-weight="700" font-family="SF Mono, monospace">GEODE</text>
+  <text x="390" y="94" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">GEO Vertical — Phase 1</text>
+  <text x="390" y="108" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">14 pages (EN+PT)</text>
+  <text x="390" y="122" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">16 queries · 5 platforms</text>
+  <text x="390" y="136" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Citation CLI · geode.digital</text>
+
+  <!-- rbs-demo -->
+  <rect x="520" y="50" width="220" height="100" rx="4" fill="#6a4a8c" fill-opacity="0.12" stroke="#6a4a8c" stroke-width="2"/>
+  <text x="630" y="78" text-anchor="middle" fill="#6a4a8c" font-size="13" font-weight="700" font-family="SF Mono, monospace">RBS-DEMO</text>
+  <text x="630" y="94" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Insurance Vertical</text>
+  <text x="630" y="108" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">2,150 LOC · 40+ fields</text>
+  <text x="630" y="122" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">3-tier extraction</text>
+  <text x="630" y="136" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Regex → Decompose → LLaVA</text>
+
+  <!-- open-scripture -->
+  <rect x="760" y="50" width="220" height="100" rx="4" fill="#6a4a8c" fill-opacity="0.12" stroke="#6a4a8c" stroke-width="2"/>
+  <text x="870" y="78" text-anchor="middle" fill="#6a4a8c" font-size="13" font-weight="700" font-family="SF Mono, monospace">OPEN-SCRIPTURE</text>
+  <text x="870" y="94" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Scripture Dataset</text>
+  <text x="870" y="108" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">31,102 verses · 344K edges</text>
+  <text x="870" y="122" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">9,971 chunks · KG 101MB</text>
+  <text x="870" y="136" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">WEB + KJV translations</text>
+
+  <!-- Arrows L2 → L3 -->
+  <line x1="300" y1="190" x2="150" y2="150" stroke="#9a6828" stroke-width="1.2" stroke-dasharray="4,4" opacity="0.3"/>
+  <line x1="450" y1="190" x2="390" y2="150" stroke="#9a6828" stroke-width="1.2" stroke-dasharray="4,4" opacity="0.3"/>
+  <line x1="650" y1="190" x2="630" y2="150" stroke="#9a6828" stroke-width="1.2" stroke-dasharray="4,4" opacity="0.3"/>
+  <line x1="800" y1="190" x2="870" y2="150" stroke="#9a6828" stroke-width="1.2" stroke-dasharray="4,4" opacity="0.3"/>
+
+  <!-- Side projects -->
+  <rect x="1000" y="50" width="90" height="30" rx="3" fill="#8c3a3a" fill-opacity="0.1" stroke="#8c3a3a" stroke-width="1"/>
+  <text x="1045" y="70" text-anchor="middle" fill="#8c3a3a" font-size="9" font-family="SF Mono, monospace">PRISM</text>
+  <rect x="1000" y="90" width="90" height="30" rx="3" fill="#8c3a3a" fill-opacity="0.1" stroke="#8c3a3a" stroke-width="1"/>
+  <text x="1045" y="110" text-anchor="middle" fill="#8c3a3a" font-size="9" font-family="SF Mono, monospace">KYLEVINES</text>
+  <rect x="1000" y="130" width="90" height="30" rx="3" fill="#8c3a3a" fill-opacity="0.1" stroke="#8c3a3a" stroke-width="1"/>
+  <text x="1045" y="150" text-anchor="middle" fill="#8c3a3a" font-size="9" font-family="SF Mono, monospace">LAB</text>
+
+  <!-- Infrastructure bar -->
+  <rect x="40" y="480" width="1050" height="30" rx="3" fill="none" stroke="var(--border)" stroke-width="1"/>
+  <text x="550" y="500" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">INFRASTRUCTURE — Docker (Qdrant · Temporal · Caddy) — Ollama (6 models) — Surface Laptop (dev) — Mac Mini (ML/prod) — GitHub Pages (sites) — GHCR (images)</text>
+</svg>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: PIPELINE FLOW                                      -->
+<!-- ============================================================ -->
+
+<p class="section-note">Pipeline</p>
+<h2>INGEST → CLASSIFY → EMBED → RETRIEVE → ACT</h2>
+<p class="subtitle">Every document passes through the same pipeline. Deterministic classification happens before any LLM touches the data.</p>
+
+<div class="diagram">
+<svg width="1100" height="300" viewBox="0 0 1100 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stage 1: INGEST -->
+  <rect x="20" y="80" width="180" height="140" rx="4" fill="#2a8c58" fill-opacity="0.08" stroke="#2a8c58" stroke-width="1.5"/>
+  <text x="110" y="104" text-anchor="middle" fill="#2a8c58" font-size="12" font-weight="700" font-family="SF Mono, monospace">INGEST</text>
+  <text x="110" y="120" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Vanta Stage 1</text>
+  <line x1="40" y1="130" x2="180" y2="130" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="36" y="146" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">PDF extraction (PyMuPDF)</text>
+  <text x="36" y="160" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">DOCX parsing</text>
+  <text x="36" y="174" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">DXF/CAD geometry</text>
+  <text x="36" y="188" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">OCR (Tesseract)</text>
+  <text x="36" y="202" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Text chunking (2000/200)</text>
+
+  <!-- Arrow -->
+  <line x1="200" y1="150" x2="230" y2="150" stroke="#2a8c58" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="226,146 234,150 226,154" fill="#2a8c58" opacity="0.5"/>
+
+  <!-- Stage 2: CLASSIFY -->
+  <rect x="234" y="80" width="180" height="140" rx="4" fill="#2a8c58" fill-opacity="0.08" stroke="#2a8c58" stroke-width="1.5"/>
+  <text x="324" y="104" text-anchor="middle" fill="#2a8c58" font-size="12" font-weight="700" font-family="SF Mono, monospace">CLASSIFY</text>
+  <text x="324" y="120" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">decompose + Vanta Stage 2</text>
+  <line x1="250" y1="130" x2="398" y2="130" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="250" y="146" fill="#2a8c58" font-size="9" font-weight="600" font-family="SF Mono, monospace">DETERMINISTIC FIRST</text>
+  <text x="250" y="160" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Authority (6 categories)</text>
+  <text x="250" y="174" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Risk (7 categories)</text>
+  <text x="250" y="188" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Entities + Irreducibility</text>
+  <text x="250" y="202" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Attention scoring (0-10)</text>
+
+  <!-- Arrow -->
+  <line x1="414" y1="150" x2="444" y2="150" stroke="#2a8c58" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="440,146 448,150 440,154" fill="#2a8c58" opacity="0.5"/>
+
+  <!-- Stage 3: EMBED -->
+  <rect x="448" y="80" width="180" height="140" rx="4" fill="#3a5a8c" fill-opacity="0.08" stroke="#3a5a8c" stroke-width="1.5"/>
+  <text x="538" y="104" text-anchor="middle" fill="#3a5a8c" font-size="12" font-weight="700" font-family="SF Mono, monospace">EMBED</text>
+  <text x="538" y="120" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Vanta Stage 3-4</text>
+  <line x1="464" y1="130" x2="612" y2="130" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="464" y="146" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">nomic-embed-text (Ollama)</text>
+  <text x="464" y="160" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">sentence-transformers</text>
+  <text x="464" y="174" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Qdrant vector upsert</text>
+  <text x="464" y="188" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">AI enrich (confidence-gated)</text>
+  <text x="464" y="202" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Only if confidence < 0.80</text>
+
+  <!-- Arrow -->
+  <line x1="628" y1="150" x2="658" y2="150" stroke="#3a5a8c" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="654,146 662,150 654,154" fill="#3a5a8c" opacity="0.5"/>
+
+  <!-- Stage 4: RETRIEVE -->
+  <rect x="662" y="80" width="180" height="140" rx="4" fill="#9a6828" fill-opacity="0.08" stroke="#9a6828" stroke-width="1.5"/>
+  <text x="752" y="104" text-anchor="middle" fill="#9a6828" font-size="12" font-weight="700" font-family="SF Mono, monospace">RETRIEVE</text>
+  <text x="752" y="120" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Daedalus + Aletheia</text>
+  <line x1="678" y1="130" x2="826" y2="130" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="678" y="146" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Qdrant vector search</text>
+  <text x="678" y="160" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Schema validation</text>
+  <text x="678" y="174" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Jurisdiction cross-ref</text>
+  <text x="678" y="188" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Audit ledger (SHA-256)</text>
+  <text x="678" y="202" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Certification (gold/silver/bronze)</text>
+
+  <!-- Arrow -->
+  <line x1="842" y1="150" x2="872" y2="150" stroke="#9a6828" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="868,146 876,150 868,154" fill="#9a6828" opacity="0.5"/>
+
+  <!-- Stage 5: ACT -->
+  <rect x="876" y="80" width="200" height="140" rx="4" fill="#6a4a8c" fill-opacity="0.08" stroke="#6a4a8c" stroke-width="1.5"/>
+  <text x="976" y="104" text-anchor="middle" fill="#6a4a8c" font-size="12" font-weight="700" font-family="SF Mono, monospace">ACT</text>
+  <text x="976" y="120" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Daedalus + Human Gate</text>
+  <line x1="892" y1="130" x2="1060" y2="130" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="892" y="146" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Intelligence reports</text>
+  <text x="892" y="160" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Civil3D / Revit scripts</text>
+  <text x="892" y="174" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">RAG chat responses</text>
+  <text x="892" y="188" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Outreach drafts</text>
+  <text x="892" y="202" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Training data export</text>
+
+  <!-- Top label bar -->
+  <rect x="20" y="30" width="394" height="24" rx="2" fill="#2a8c58" fill-opacity="0.06"/>
+  <text x="217" y="46" text-anchor="middle" fill="#2a8c58" font-size="9" font-weight="600" font-family="SF Mono, monospace">DETERMINISTIC — No LLM, no GPU, no hallucination</text>
+  <rect x="448" y="30" width="180" height="24" rx="2" fill="#3a5a8c" fill-opacity="0.06"/>
+  <text x="538" y="46" text-anchor="middle" fill="#3a5a8c" font-size="9" font-weight="600" font-family="SF Mono, monospace">GATED — LLM if needed</text>
+  <rect x="662" y="30" width="414" height="24" rx="2" fill="#9a6828" fill-opacity="0.06"/>
+  <text x="869" y="46" text-anchor="middle" fill="#9a6828" font-size="9" font-weight="600" font-family="SF Mono, monospace">VERIFIED — Provenance tracked, human-approved</text>
+
+  <!-- Document input -->
+  <text x="110" y="244" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">PDF · DOCX · DXF · TXT · MD</text>
+  <text x="110" y="258" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">CSV · HTML · JSON · Images</text>
+  <line x1="110" y1="230" x2="110" y2="220" stroke="#5a6070" stroke-width="0.8" opacity="0.3"/>
+  <polygon points="106,224 110,216 114,224" fill="#5a6070" opacity="0.3"/>
+</svg>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: OPS COMMAND CENTER                                 -->
+<!-- ============================================================ -->
+
+<p class="section-note">Operations</p>
+<h2>Ops Command Center</h2>
+<p class="subtitle">The nervous system. 14 database tables, 30+ agent skills, human-in-the-loop gates on every external action.</p>
+
+<div class="diagram">
+<svg width="1100" height="360" viewBox="0 0 1100 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Central ops hub -->
+  <rect x="400" y="120" width="300" height="120" rx="6" fill="#9a6828" fill-opacity="0.1" stroke="#9a6828" stroke-width="2"/>
+  <text x="550" y="148" text-anchor="middle" fill="#9a6828" font-size="14" font-weight="700" font-family="SF Mono, monospace">OPS DASHBOARD</text>
+  <text x="550" y="166" text-anchor="middle" fill="#5a6070" font-size="10" font-family="SF Mono, monospace">Port 8444 — FastAPI + HTMX</text>
+  <text x="550" y="182" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">21 routes · 21 templates · Zero JS frameworks</text>
+  <text x="550" y="198" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Every mutation is a proposal until approved</text>
+  <text x="550" y="214" text-anchor="middle" fill="#c8a84e" font-size="9" font-weight="600" font-family="SF Mono, monospace">HUMAN GATE ON ALL EXTERNAL ACTIONS</text>
+
+  <!-- DB Tables (left) -->
+  <rect x="20" y="20" width="340" height="320" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+  <text x="190" y="44" text-anchor="middle" fill="#5a6070" font-size="10" font-weight="700" font-family="SF Mono, monospace">SQLite — ops.db — 14 Tables</text>
+  <line x1="40" y1="52" x2="340" y2="52" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="36" y="70" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">merit_log</text><text x="180" y="70" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Daily M.E.R.I.T. tracking</text>
+  <text x="36" y="86" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">leads</text><text x="180" y="86" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">CRM pipeline + scoring</text>
+  <text x="36" y="102" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">interactions</text><text x="180" y="102" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Every touchpoint logged</text>
+  <text x="36" y="118" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">financial_tracker</text><text x="180" y="118" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Revenue + expenses</text>
+  <text x="36" y="134" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">tasks</text><text x="180" y="134" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Notion sync + new tasks</text>
+  <text x="36" y="150" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">corpus_index</text><text x="180" y="150" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Ingested documents</text>
+  <text x="36" y="166" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">corpus_chunks</text><text x="180" y="166" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Text chunks + embeddings</text>
+  <text x="36" y="182" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">decision_log</text><text x="180" y="182" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Audit trail (reversible?)</text>
+  <text x="36" y="198" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">weekly_review</text><text x="180" y="198" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Saturday review snapshots</text>
+  <text x="36" y="214" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">objectives</text><text x="180" y="214" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">"I Will Obtain" targets</text>
+  <text x="36" y="230" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">content_queue</text><text x="180" y="230" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Draft → review → publish</text>
+  <text x="36" y="246" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">citation_queries</text><text x="180" y="246" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">GEO query tracking</text>
+  <text x="36" y="262" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">citation_checks</text><text x="180" y="262" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Platform citation results</text>
+  <text x="36" y="278" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">engagements</text><text x="180" y="278" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Client engagement tracking</text>
+  <text x="36" y="298" fill="#5a6070" font-size="8" font-family="SF Mono, monospace">+ idea_archive, followup_log, onboarding,</text>
+  <text x="36" y="312" fill="#5a6070" font-size="8" font-family="SF Mono, monospace">  case_study_log, citation_surfaces, lead_sequences</text>
+
+  <!-- Connection DB → Dashboard -->
+  <line x1="360" y1="180" x2="400" y2="180" stroke="#9a6828" stroke-width="1" opacity="0.3"/>
+
+  <!-- Agent System (right) -->
+  <rect x="740" y="20" width="340" height="320" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+  <text x="910" y="44" text-anchor="middle" fill="#5a6070" font-size="10" font-weight="700" font-family="SF Mono, monospace">Agent Orchestrator — 30+ Skills</text>
+  <line x1="760" y1="52" x2="1060" y2="52" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="756" y="70" fill="#c8a84e" font-size="9" font-weight="600" font-family="SF Mono, monospace">EXECUTION LOOP</text>
+  <text x="756" y="88" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">1. Read situation (structured state)</text>
+  <text x="756" y="104" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">2. Reason (LLM analyzes priorities)</text>
+  <text x="756" y="120" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">3. Execute through skills</text>
+  <text x="756" y="136" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">4. Gate external actions</text>
+  <text x="756" y="152" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">5. Log everything</text>
+  <line x1="760" y1="162" x2="1060" y2="162" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="756" y="180" fill="#c8a84e" font-size="9" font-weight="600" font-family="SF Mono, monospace">SKILL CATEGORIES</text>
+  <text x="756" y="198" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Revenue</text><text x="830" y="198" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">leads_list, score, stage, stale</text>
+  <text x="756" y="214" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Financial</text><text x="830" y="214" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">summary, by_category, update</text>
+  <text x="756" y="230" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Content</text><text x="830" y="230" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">draft, queue, publish</text>
+  <text x="756" y="246" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Outreach</text><text x="830" y="246" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">draft_email, approve, send</text>
+  <text x="756" y="262" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Tasks</text><text x="830" y="262" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">list, create, update</text>
+  <text x="756" y="278" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Intel</text><text x="830" y="278" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">SOP violations, forecast, reconcile</text>
+  <line x1="760" y1="290" x2="1060" y2="290" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="756" y="308" fill="#c8a84e" font-size="9" font-weight="600" font-family="SF Mono, monospace">MODULES</text>
+  <text x="756" y="324" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">context · executor · gateway · memory · prompts</text>
+
+  <!-- Connection Dashboard → Agent -->
+  <line x1="700" y1="180" x2="740" y2="180" stroke="#9a6828" stroke-width="1" opacity="0.3"/>
+</svg>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: INFRASTRUCTURE                                     -->
+<!-- ============================================================ -->
+
+<p class="section-note">Infrastructure</p>
+<h2>Docker Services + Hardware</h2>
+
+<div class="detail-grid">
+  <div class="detail-card">
+    <span class="tag">Service</span>
+    <h3>Qdrant (v1.13.2)</h3>
+    <p>Vector storage for embeddings. HTTP + gRPC.</p>
+    <ul>
+      <li>Port <span class="metric">6333</span> (HTTP), 6334 (gRPC)</li>
+      <li>2 CPU, 2 GB RAM</li>
+      <li>Persistent volume: qdrant_data</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Service</span>
+    <h3>Temporal (v1.26.2)</h3>
+    <p>Workflow orchestration for long-running tasks.</p>
+    <ul>
+      <li>Port <span class="metric">7233</span> (gRPC)</li>
+      <li>UI at port <span class="metric">8233</span></li>
+      <li>SQLite backend</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Service</span>
+    <h3>Ollama</h3>
+    <p>Local LLM inference. Runs on host GPU, not in container.</p>
+    <ul>
+      <li>Port <span class="metric">11434</span></li>
+      <li>Models: llama3, llava, nomic-embed-text, aecai, phi3, gemma2</li>
+      <li>Primary: Mac Mini (Apple Silicon)</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Service</span>
+    <h3>Caddy (v2-alpine)</h3>
+    <p>Reverse proxy with automatic TLS.</p>
+    <ul>
+      <li>Ports <span class="metric">80, 443</span></li>
+      <li>echology.io → server:8443</li>
+      <li>Rate limiting: 60 req/min/host</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Hardware</span>
+    <h3>Surface Laptop 4</h3>
+    <p>Primary development machine.</p>
+    <ul>
+      <li>Pop!_OS 24.04, i7-1185G7, 16GB</li>
+      <li>LAN: <span class="metric">10.0.0.64</span></li>
+      <li>Docker, Claude Code, VS Code</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Hardware</span>
+    <h3>Mac Mini</h3>
+    <p>ML inference + production services.</p>
+    <ul>
+      <li>macOS 26.3 (Tahoe), Apple Silicon</li>
+      <li>LAN: <span class="metric">10.0.0.118</span></li>
+      <li>launchd: io.echology.aecai, io.echology.ops</li>
+      <li>cloudflared tunnel to aecai.io</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: EXTERNAL SURFACES                                  -->
+<!-- ============================================================ -->
+
+<p class="section-note">External</p>
+<h2>Public Surfaces + Deployments</h2>
+
+<div class="detail-grid">
+  <div class="detail-card">
+    <span class="tag">Website</span>
+    <h3>echology.io</h3>
+    <p>Company marketing site. GitHub Pages.</p>
+    <ul>
+      <li>Product pages, blog, decompose docs</li>
+      <li>Portuguese translations</li>
+      <li>GEO citation surfaces</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Platform</span>
+    <h3>aecai.io</h3>
+    <p>AEC document intelligence. Cloudflare tunnel to Mac Mini.</p>
+    <ul>
+      <li>Port 8443 via cloudflared</li>
+      <li>Public: demo, engage, GEO pages</li>
+      <li>Localhost: process, app, chat, outreach</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Website</span>
+    <h3>geode.digital</h3>
+    <p>GEO services brand. GitHub Pages.</p>
+    <ul>
+      <li>14 pages (EN + PT)</li>
+      <li>Build log, methodology, contact form</li>
+      <li>Form → ops.aecai.io/api/leads/inbound</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Website</span>
+    <h3>kylevines.com</h3>
+    <p>Personal site. GitHub Pages.</p>
+    <ul>
+      <li>Blog, about, contact, projects</li>
+      <li>field.js wave canvas</li>
+      <li>CRT terminal aesthetic</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Package</span>
+    <h3>PyPI: decompose-mcp</h3>
+    <p>Published Python package. v0.2.0.</p>
+    <ul>
+      <li>pip install decompose-mcp</li>
+      <li>MCP server + CLI</li>
+      <li>MIT License</li>
+    </ul>
+  </div>
+  <div class="detail-card">
+    <span class="tag">Registry</span>
+    <h3>GHCR Images</h3>
+    <p>Docker images built on push to main.</p>
+    <ul>
+      <li>ghcr.io/echology-io/echology-server</li>
+      <li>ghcr.io/echology-io/ops-dashboard</li>
+      <li>GitHub Actions CI/CD</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: STRATEGY                                           -->
+<!-- ============================================================ -->
+
+<p class="section-note">Strategy</p>
+<h2>Foundation Values + Structural Principles</h2>
+
+<div class="diagram">
+<svg width="1100" height="280" viewBox="0 0 1100 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Values -->
+  <rect x="20" y="20" width="530" height="240" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+  <text x="285" y="46" text-anchor="middle" fill="#c8a84e" font-size="11" font-weight="700" font-family="SF Mono, monospace">FIVE CORE VALUES</text>
+  <line x1="40" y1="56" x2="530" y2="56" stroke="var(--border)" stroke-width="0.5"/>
+
+  <text x="40" y="80" fill="#2a8c58" font-size="10" font-weight="600" font-family="SF Mono, monospace">I.</text>
+  <text x="60" y="80" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Truth over plausibility</text>
+  <text x="60" y="96" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Deterministic classification before probabilistic generation</text>
+
+  <text x="40" y="120" fill="#2a8c58" font-size="10" font-weight="600" font-family="SF Mono, monospace">II.</text>
+  <text x="60" y="120" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Structure over volume</text>
+  <text x="60" y="136" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Reduce noise. Increase density. Less that is true > more that is approximate</text>
+
+  <text x="40" y="160" fill="#2a8c58" font-size="10" font-weight="600" font-family="SF Mono, monospace">III.</text>
+  <text x="60" y="160" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Provenance over assertion</text>
+  <text x="60" y="176" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Immutable audit trails. Origin determines nature. Chain never broken</text>
+
+  <text x="40" y="200" fill="#2a8c58" font-size="10" font-weight="600" font-family="SF Mono, monospace">IV.</text>
+  <text x="60" y="200" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Perception over generation</text>
+  <text x="60" y="216" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">See before speaking. Classify before inferring. Understand before responding</text>
+
+  <text x="40" y="240" fill="#2a8c58" font-size="10" font-weight="600" font-family="SF Mono, monospace">V.</text>
+  <text x="60" y="240" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Integrity under pressure</text>
+  <text x="60" y="256" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Accuracy wins over speed, cost, market pressure, or impressiveness</text>
+
+  <!-- Principles -->
+  <rect x="570" y="20" width="510" height="240" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+  <text x="825" y="46" text-anchor="middle" fill="#c8a84e" font-size="11" font-weight="700" font-family="SF Mono, monospace">STRUCTURAL PRINCIPLES</text>
+  <line x1="590" y1="56" x2="1060" y2="56" stroke="var(--border)" stroke-width="0.5"/>
+
+  <text x="590" y="80" fill="#3a5a8c" font-size="10" font-weight="600" font-family="SF Mono, monospace">Unified System</text>
+  <text x="590" y="96" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Not a feature collection. One coherent architecture.</text>
+
+  <text x="590" y="120" fill="#3a5a8c" font-size="10" font-weight="600" font-family="SF Mono, monospace">Semantic Proximity</text>
+  <text x="590" y="136" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Information that shares meaning shares structure. Find by meaning.</text>
+
+  <text x="590" y="160" fill="#3a5a8c" font-size="10" font-weight="600" font-family="SF Mono, monospace">Workflow as Architecture</text>
+  <text x="590" y="176" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Carry intelligence from source to decision-maker without distortion.</text>
+
+  <text x="590" y="200" fill="#3a5a8c" font-size="10" font-weight="600" font-family="SF Mono, monospace">AI as Lens</text>
+  <text x="590" y="216" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Not answer machines. Lenses that sharpen perception of existing structure.</text>
+
+  <text x="590" y="240" fill="#3a5a8c" font-size="10" font-weight="600" font-family="SF Mono, monospace">Deterministic First</text>
+  <text x="590" y="256" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Foundation must be reliable. Inference on inference is noise.</text>
+</svg>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: TRAINING PIPELINE                                  -->
+<!-- ============================================================ -->
+
+<p class="section-note">Training</p>
+<h2>Three-Layer Model Architecture</h2>
+
+<div class="diagram">
+<svg width="900" height="200" viewBox="0 0 900 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Layer 1: echology -->
+  <rect x="20" y="20" width="260" height="160" rx="4" fill="#2a8c58" fill-opacity="0.08" stroke="#2a8c58" stroke-width="1.5"/>
+  <text x="150" y="46" text-anchor="middle" fill="#2a8c58" font-size="12" font-weight="700" font-family="SF Mono, monospace">LAYER 1: echology:latest</text>
+  <text x="150" y="64" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Platform Intelligence</text>
+  <line x1="40" y1="72" x2="260" y2="72" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="36" y="90" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">401 training pairs (current)</text>
+  <text x="36" y="106" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Target: 1,500-2,300 pairs</text>
+  <text x="36" y="122" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Sources: FOUNDATION, CLAUDE,</text>
+  <text x="36" y="136" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">architecture, ops, prompts</text>
+  <text x="36" y="156" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Perplexity: 6.427</text>
+
+  <!-- Arrow -->
+  <line x1="280" y1="100" x2="310" y2="100" stroke="#5a6070" stroke-width="1" opacity="0.4"/>
+  <polygon points="306,96 314,100 306,104" fill="#5a6070" opacity="0.4"/>
+
+  <!-- Layer 2: vertical -->
+  <rect x="320" y="20" width="260" height="160" rx="4" fill="#9a6828" fill-opacity="0.08" stroke="#9a6828" stroke-width="1.5"/>
+  <text x="450" y="46" text-anchor="middle" fill="#9a6828" font-size="12" font-weight="700" font-family="SF Mono, monospace">LAYER 2: aecai:latest</text>
+  <text x="450" y="64" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Industry Knowledge</text>
+  <line x1="340" y1="72" x2="560" y2="72" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="336" y="90" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">714 pairs (401 base + 313 AEC)</text>
+  <text x="336" y="106" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Target: 5,000+ pairs</text>
+  <text x="336" y="122" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Sources: base + Vanta pipeline,</text>
+  <text x="336" y="136" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">domain docs, SOPs, marketing</text>
+  <text x="336" y="156" fill="#9a6828" font-size="9" font-family="SF Mono, monospace">Perplexity: 5.415</text>
+
+  <!-- Arrow -->
+  <line x1="580" y1="100" x2="610" y2="100" stroke="#5a6070" stroke-width="1" opacity="0.4"/>
+  <polygon points="606,96 614,100 606,104" fill="#5a6070" opacity="0.4"/>
+
+  <!-- Layer 3: customer -->
+  <rect x="620" y="20" width="260" height="160" rx="4" fill="#6a4a8c" fill-opacity="0.08" stroke="#6a4a8c" stroke-width="1.5"/>
+  <text x="750" y="46" text-anchor="middle" fill="#6a4a8c" font-size="12" font-weight="700" font-family="SF Mono, monospace">LAYER 3: {customer}:latest</text>
+  <text x="750" y="64" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Customer-Specific</text>
+  <line x1="640" y1="72" x2="860" y2="72" stroke="var(--border)" stroke-width="0.5"/>
+  <text x="636" y="90" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Their specs, contracts, RFIs</text>
+  <text x="636" y="106" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Their meeting minutes, lessons</text>
+  <text x="636" y="122" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Runs on their hardware</text>
+  <text x="636" y="136" fill="#c8a84e" font-size="9" font-weight="600" font-family="SF Mono, monospace">NEVER LEAVES THEIR NETWORK</text>
+  <text x="636" y="156" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">MLX LoRA on Apple Silicon</text>
+</svg>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 8: GEODE CITATION LOOP                                -->
+<!-- ============================================================ -->
+
+<p class="section-note">Growth Engine</p>
+<h2>Geode Self-Validating Loop</h2>
+
+<div class="diagram">
+<svg width="800" height="320" viewBox="0 0 800 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Loop nodes -->
+  <rect x="280" y="10" width="240" height="44" rx="4" fill="#6a4a8c" fill-opacity="0.12" stroke="#6a4a8c" stroke-width="1.5"/>
+  <text x="400" y="37" text-anchor="middle" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Geode executes GEO methodology</text>
+
+  <rect x="560" y="80" width="220" height="44" rx="4" fill="#2a8c58" fill-opacity="0.12" stroke="#2a8c58" stroke-width="1.5"/>
+  <text x="670" y="100" text-anchor="middle" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Portfolio becomes AI-cited</text>
+  <text x="670" y="114" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">echology + AECai + Geode</text>
+
+  <rect x="560" y="160" width="220" height="44" rx="4" fill="#9a6828" fill-opacity="0.12" stroke="#9a6828" stroke-width="1.5"/>
+  <text x="670" y="187" text-anchor="middle" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Buyers find via AI search</text>
+
+  <rect x="280" y="240" width="240" height="44" rx="4" fill="#c8a84e" fill-opacity="0.12" stroke="#c8a84e" stroke-width="1.5"/>
+  <text x="400" y="267" text-anchor="middle" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Methodology proven on portfolio</text>
+
+  <rect x="20" y="160" width="220" height="44" rx="4" fill="#6a4a8c" fill-opacity="0.12" stroke="#6a4a8c" stroke-width="1.5"/>
+  <text x="130" y="187" text-anchor="middle" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Sell to external clients</text>
+
+  <rect x="20" y="80" width="220" height="44" rx="4" fill="#3a5a8c" fill-opacity="0.12" stroke="#3a5a8c" stroke-width="1.5"/>
+  <text x="130" y="100" text-anchor="middle" fill="#ccc8bc" font-size="10" font-family="SF Mono, monospace">Case studies validate</text>
+  <text x="130" y="114" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">echology technology</text>
+
+  <!-- Arrows forming the loop -->
+  <line x1="520" y1="32" x2="560" y2="80" stroke="#5a6070" stroke-width="1" opacity="0.3"/>
+  <line x1="670" y1="124" x2="670" y2="160" stroke="#5a6070" stroke-width="1" opacity="0.3"/>
+  <line x1="560" y1="182" x2="520" y2="240" stroke="#5a6070" stroke-width="1" opacity="0.3"/>
+  <line x1="280" y1="262" x2="240" y2="204" stroke="#5a6070" stroke-width="1" opacity="0.3"/>
+  <line x1="130" y1="160" x2="130" y2="124" stroke="#5a6070" stroke-width="1" opacity="0.3"/>
+  <line x1="240" y1="102" x2="280" y2="54" stroke="#5a6070" stroke-width="1" opacity="0.3"/>
+
+  <!-- Center: loop compounds -->
+  <text x="400" y="160" text-anchor="middle" fill="#c8a84e" font-size="11" font-weight="700" font-family="SF Mono, monospace">LOOP</text>
+  <text x="400" y="176" text-anchor="middle" fill="#c8a84e" font-size="9" font-family="SF Mono, monospace">COMPOUNDS</text>
+
+  <!-- Baseline stats -->
+  <text x="400" y="310" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Baseline (2026-03-14): Geode 0/6 · echology 1/5 · AECai 2/5 — 90-day target: 5/6 · 4/5 · 5/5</text>
+</svg>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 9: PROJECT DETAIL CARDS                               -->
+<!-- ============================================================ -->
+
+<p class="section-note">Inventory</p>
+<h2>All Projects</h2>
+
+<div class="detail-grid">
+  <div class="detail-card">
+    <span class="tag">L0 Foundation</span>
+    <h3>decompose</h3>
+    <p>Deterministic text classification. Zero deps. Published on PyPI. The thing everything depends on.</p>
+    <ul>
+      <li><span class="metric">4,837</span> LOC · <span class="metric">63</span> tests</li>
+      <li>3 public functions: decompose_text, decompose, filter_for_llm</li>
+      <li>6 authority categories, 7 risk categories</li>
+      <li>10 irreducibility patterns</li>
+      <li>MCP server (2 tools) + CLI</li>
+      <li>Entity extraction: standards, dates, financial, legal refs</li>
+      <li>Semantic chunking (Markdown-aware, 2000/200)</li>
+      <li>Marketing automation pipeline</li>
+      <li>Performance: ~14ms per document, 1000+ chars/ms</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">L1 Platform</span>
+    <h3>engine</h3>
+    <p>Three-engine document intelligence. Domain-agnostic core with 19 seams for vertical configuration.</p>
+    <ul>
+      <li><span class="metric">~15,000</span> LOC · <span class="metric">70%</span> universal</li>
+      <li>Vanta: 13 modules (core, classify, pipeline, ai, plugins, embed, index, batch, geometry, security, torsion)</li>
+      <li>Aletheia: 6 modules (schema, jurisdiction, ledger, cli)</li>
+      <li>Daedalus: 6 modules (retrieve, report, scripts)</li>
+      <li>Config: dual env var support (ECHOLOGY_* / AECAI_*)</li>
+      <li>Domain loader: ECHOLOGY_DOMAIN env var</li>
+      <li>Torsion: adaptive computation (cognitive systems 1-4)</li>
+      <li>13 simulation systems consolidated</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">L2 Operations</span>
+    <h3>ops</h3>
+    <p>Command center. CRM, financial, content, corpus, agent orchestrator, training pipeline, dashboard.</p>
+    <ul>
+      <li><span class="metric">~4,200</span> LOC (core + dashboard)</li>
+      <li>14 database tables, 40+ query functions</li>
+      <li>30+ agent skills across 6 categories</li>
+      <li>Dashboard: 21 routes, 21 templates, HTMX</li>
+      <li>CLI: generate, ingest, sync, week, check, train, dashboard</li>
+      <li>Agent: context, executor, gateway, memory, skills, prompts</li>
+      <li>Lead scoring: ICP, persona, intent, engagement (deterministic)</li>
+      <li>Charts: radar, bar, matrix, waterfall, timeline (SVG)</li>
+      <li>Invoice generation, email (SMTP), sequences</li>
+      <li>Calendar: custody schedule, planetary days</li>
+      <li>Training pipeline: 3-layer model architecture</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">L3 Vertical</span>
+    <h3>aecai</h3>
+    <p>AEC document intelligence. FastAPI + Temporal + Qdrant. Full pipeline with verification and retrieval.</p>
+    <ul>
+      <li><span class="metric">v3.1.0</span> · <span class="metric">569</span> tests · <span class="metric">84</span> routes</li>
+      <li>6 Temporal workflows, 20+ activities</li>
+      <li>4 domain modules: aec.py, civil3d.py, revit.py, geometry.py</li>
+      <li>TEA breach protocol (file security)</li>
+      <li>OCR: PyMuPDF + Tesseract</li>
+      <li>RAG chat (Qdrant + Ollama streaming)</li>
+      <li>Deliverables: 6 report templates</li>
+      <li>GEO surfaces (EN + PT)</li>
+      <li>Docker: decompose → engine → ops → aecai layer</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">L3 Vertical</span>
+    <h3>geode</h3>
+    <p>AI citation optimization (GEO). Dual function: portfolio marketing engine + external service.</p>
+    <ul>
+      <li>Phase 1 active (Foundation)</li>
+      <li>14 site pages (7 EN + 7 PT) on geode.digital</li>
+      <li>16 baseline queries across 5 platforms</li>
+      <li>Citation CLI: query, check, report, surfaces, surface</li>
+      <li>Strategy: 784-line vertical strategy doc</li>
+      <li>Revenue target: $5-10K/month at 90 days</li>
+      <li>Self-validating loop: prove on portfolio, sell externally</li>
+      <li>3 portfolio clients: echology, AECai, Geode</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">L3 Vertical</span>
+    <h3>rbs-demo</h3>
+    <p>Insurance policy QC. 3-tier extraction: regex, decompose+Ollama, LLaVA vision.</p>
+    <ul>
+      <li><span class="metric">2,150</span> LOC single-file server</li>
+      <li>40+ extracted fields across property, GL, auto</li>
+      <li>3-tier: native PDF regex → AI text → vision model</li>
+      <li>Compare quotes vs policies vs TAM exports</li>
+      <li>XLSX export for discrepancy reports</li>
+      <li>SOP + HITL touchpoint documentation</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">L3 Data</span>
+    <h3>open-scripture</h3>
+    <p>AI-ready Bible dataset + knowledge graph. Proves cross-domain thesis.</p>
+    <ul>
+      <li><span class="metric">31,102</span> verses · <span class="metric">344,799</span> edges</li>
+      <li>9,971 passage chunks (retrieval-optimized)</li>
+      <li>Knowledge graph: 101MB (nodes + edges)</li>
+      <li>3 data layers: canonical, chunks, graph</li>
+      <li>WEB + KJV translations (public domain)</li>
+      <li>Domain module for engine integration</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">Personal</span>
+    <h3>prism</h3>
+    <p>Desktop email/calendar. Tauri + React + Rust. Local-first, connects to Proton Bridge.</p>
+    <ul>
+      <li>Tauri (Rust) + React + TypeScript + Tailwind</li>
+      <li>IMAP sync, CalDAV, SMTP compose</li>
+      <li>SQLite + FTS5 full-text search</li>
+      <li>Zustand state management</li>
+      <li>3-panel AppShell layout</li>
+      <li>Not core echology</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">R&D</span>
+    <h3>lab</h3>
+    <p>Test harness, simulations, research. Anthropic prompt corpus.</p>
+    <ul>
+      <li>MCP test client (test_mcp.py)</li>
+      <li>4 simulation systems: Vanta, Vanta torsion, Aletheia, Daedalus</li>
+      <li>Anthropic corpus: 10 prompting guides</li>
+      <li>Experimental ground before production</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">Marketing</span>
+    <h3>echology-site</h3>
+    <p>echology.io marketing. Product pages, blog, decompose docs, GEO surfaces.</p>
+    <ul>
+      <li>GitHub Pages deployment</li>
+      <li>Product pages: aecai, decompose, geode</li>
+      <li>Blog with posts</li>
+      <li>Portuguese translations</li>
+      <li>GEO citation surfaces</li>
+      <li>Logo drafts (6 iterations)</li>
+    </ul>
+  </div>
+
+  <div class="detail-card">
+    <span class="tag">Personal</span>
+    <h3>kylevines</h3>
+    <p>kylevines.com. Personal site, blog, field.js wave canvas.</p>
+    <ul>
+      <li>GitHub Pages deployment</li>
+      <li>CRT terminal aesthetic</li>
+      <li>Blog: "Why I Build"</li>
+      <li>Projects: echology, AECai, decompose, Geode</li>
+      <li>Dark/light mode toggle</li>
+      <li>Logo drafts (v1, v2)</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- SECTION 10: THE TEST                                          -->
+<!-- ============================================================ -->
+
+<div style="text-align: center; padding: 60px 0;">
+  <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--amber); margin-bottom: 16px;">The Test</p>
+  <p style="font-size: 20px; font-weight: 700; color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">Does this reveal structure or introduce noise?</p>
+  <p style="font-size: 13px; color: var(--muted); margin-top: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">If it reveals structure, build it. If it introduces noise, don't.</p>
+</div>
+
+<hr>
+
+<footer style="padding: 20px 0; text-align: center;">
+  <p style="font-size: 11px; color: var(--muted);">echology.io &middot; Machine Map &middot; 2026-03-15</p>
+</footer>
+
+</div><!-- .map-content -->
+
+<script>
+function toggleMode() {
+    var isLight = document.body.classList.toggle('light');
+    var btn = document.querySelector('.mode-toggle');
+    btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+    localStorage.setItem('mode', isLight ? 'light' : 'dark');
+}
+(function() {
+    if (localStorage.getItem('mode') === 'light') {
+        document.body.classList.add('light');
+        var btn = document.querySelector('.mode-toggle');
+        if (btn) btn.innerHTML = '&#9788;';
+    }
+})();
+</script>
+
+</body>
+</html>
