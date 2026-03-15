@@ -144,7 +144,7 @@
 <div class="stats">
   <div class="stat"><span class="stat-num">11</span><span class="stat-label">Projects</span></div>
   <div class="stat"><span class="stat-num">~40K</span><span class="stat-label">Lines of Code</span></div>
-  <div class="stat"><span class="stat-num">700+</span><span class="stat-label">Tests</span></div>
+  <div class="stat"><span class="stat-num">764</span><span class="stat-label">Tests</span></div>
   <div class="stat"><span class="stat-num">84</span><span class="stat-label">API Routes</span></div>
   <div class="stat"><span class="stat-num">30+</span><span class="stat-label">Agent Skills</span></div>
   <div class="stat"><span class="stat-num">14</span><span class="stat-label">DB Tables</span></div>
@@ -175,7 +175,7 @@
   <!-- L0: decompose -->
   <rect x="360" y="420" width="380" height="70" rx="4" fill="#2a8c58" fill-opacity="0.12" stroke="#2a8c58" stroke-width="2"/>
   <text x="550" y="448" text-anchor="middle" fill="#2a8c58" font-size="14" font-weight="700" font-family="SF Mono, monospace">DECOMPOSE</text>
-  <text x="550" y="466" text-anchor="middle" fill="#5a6070" font-size="10" font-family="SF Mono, monospace">L0 — Deterministic Foundation — PyPI — 4,837 LOC — 63 tests — Zero deps</text>
+  <text x="550" y="466" text-anchor="middle" fill="#5a6070" font-size="10" font-family="SF Mono, monospace">L0 — Deterministic Foundation — PyPI — 4,837 LOC — 73 tests — Zero deps</text>
   <text x="550" y="480" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">classify() · decompose_text() · filter_for_llm() · 6 authority · 7 risk · MCP server</text>
 
   <!-- L1: engine -->
@@ -495,7 +495,7 @@
       <li>macOS 26.3 (Tahoe), Apple Silicon</li>
       <li>LAN: <span class="metric">10.0.0.118</span></li>
       <li>launchd: io.echology.aecai, io.echology.ops</li>
-      <li>cloudflared tunnel to aecai.io</li>
+      <li>cloudflared: aecai.io + ops.aecai.io</li>
     </ul>
   </div>
 </div>
@@ -646,8 +646,8 @@
   <text x="150" y="46" text-anchor="middle" fill="#2a8c58" font-size="12" font-weight="700" font-family="SF Mono, monospace">LAYER 1: echology:latest</text>
   <text x="150" y="64" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Platform Intelligence</text>
   <line x1="40" y1="72" x2="260" y2="72" stroke="var(--border)" stroke-width="0.5"/>
-  <text x="36" y="90" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">401 training pairs (current)</text>
-  <text x="36" y="106" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Target: 1,500-2,300 pairs</text>
+  <text x="36" y="90" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">3,319 training pairs (1,319 foundation + 2,000 supplemental)</text>
+  <text x="36" y="106" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Doc target: 1,500-2,300 (exceeded)</text>
   <text x="36" y="122" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Sources: FOUNDATION, CLAUDE,</text>
   <text x="36" y="136" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">architecture, ops, prompts</text>
   <text x="36" y="156" fill="#2a8c58" font-size="9" font-family="SF Mono, monospace">Perplexity: 6.427</text>
@@ -661,7 +661,7 @@
   <text x="450" y="46" text-anchor="middle" fill="#9a6828" font-size="12" font-weight="700" font-family="SF Mono, monospace">LAYER 2: aecai:latest</text>
   <text x="450" y="64" text-anchor="middle" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Industry Knowledge</text>
   <line x1="340" y1="72" x2="560" y2="72" stroke="var(--border)" stroke-width="0.5"/>
-  <text x="336" y="90" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">714 pairs (401 base + 313 AEC)</text>
+  <text x="336" y="90" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">1,173 pairs (1,100 platform + 73 AEC)</text>
   <text x="336" y="106" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Target: 5,000+ pairs</text>
   <text x="336" y="122" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">Sources: base + Vanta pipeline,</text>
   <text x="336" y="136" fill="#5a6070" font-size="9" font-family="SF Mono, monospace">domain docs, SOPs, marketing</text>
@@ -748,7 +748,7 @@
     <h3>decompose</h3>
     <p>Deterministic text classification. Zero deps. Published on PyPI. The thing everything depends on.</p>
     <ul>
-      <li><span class="metric">4,837</span> LOC · <span class="metric">63</span> tests</li>
+      <li><span class="metric">4,837</span> LOC · <span class="metric">73</span> tests</li>
       <li>3 public functions: decompose_text, decompose, filter_for_llm</li>
       <li>6 authority categories, 7 risk categories</li>
       <li>10 irreducibility patterns</li>
@@ -859,13 +859,11 @@
   <div class="detail-card">
     <span class="tag">Personal</span>
     <h3>prism</h3>
-    <p>Desktop email/calendar. Tauri + React + Rust. Local-first, connects to Proton Bridge.</p>
+    <p>Desktop email/calendar concept. Tauri + React + Rust. Currently a stub.</p>
     <ul>
-      <li>Tauri (Rust) + React + TypeScript + Tailwind</li>
-      <li>IMAP sync, CalDAV, SMTP compose</li>
-      <li>SQLite + FTS5 full-text search</li>
-      <li>Zustand state management</li>
-      <li>3-panel AppShell layout</li>
+      <li>Template boilerplate only (src/ empty)</li>
+      <li>ARCHITECTURE.md planned but unbuilt</li>
+      <li>No active development (&gt;2 months idle)</li>
       <li>Not core echology</li>
     </ul>
   </div>
