@@ -102,6 +102,39 @@
             </div>
         </section>
 
+        <section style="padding: 80px 0 0;">
+            <div class="container container--narrow" style="text-align:center;">
+                <p class="section-label">Live from ops.db</p>
+                <div id="revenue-ticker" style="margin: 32px 0 24px;">
+                    <div style="font-size: 64px; font-weight: 700; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; color: var(--accent); letter-spacing: -2px; line-height: 1;">
+                        $<span id="rev-amount">0</span>
+                    </div>
+                    <div style="font-size: 13px; color: var(--muted); margin-top: 8px; letter-spacing: 1px; text-transform: uppercase;">revenue to date</div>
+                    <div style="font-size: 14px; color: var(--amber); margin-top: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+                        Be the first to make it move.
+                    </div>
+                </div>
+                <div id="live-stats" style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-top: 32px;">
+                    <div class="stat-cell">
+                        <div class="stat-num" id="stat-initiatives">--</div>
+                        <div class="stat-label">initiatives</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-num" id="stat-steps">--</div>
+                        <div class="stat-label">steps completed</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-num" id="stat-ledger">--</div>
+                        <div class="stat-label">ledger entries</div>
+                    </div>
+                    <div class="stat-cell">
+                        <div class="stat-num" id="stat-sweeps">--</div>
+                        <div class="stat-label">agent sweeps</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section>
             <div class="container container--narrow" style="text-align:center; padding: 60px 0 40px;">
                 <p class="section-label">Follow the experiment</p>
@@ -132,8 +165,36 @@
 
     </div>
 
+    <style>
+    .stat-cell { min-width: 100px; }
+    .stat-num {
+        font-size: 28px; font-weight: 700; color: var(--fg);
+        font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    }
+    .stat-label {
+        font-size: 11px; color: var(--muted); text-transform: uppercase;
+        letter-spacing: 1.5px; margin-top: 4px;
+    }
+    </style>
     <script src="field.js"></script>
     <script>
+    (function() {
+        fetch('https://ops.echology.io/api/stats')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                var rev = document.getElementById('rev-amount');
+                if (rev) rev.textContent = d.revenue ? d.revenue.toLocaleString() : '0';
+                var si = document.getElementById('stat-initiatives');
+                if (si) si.textContent = d.initiatives || '0';
+                var ss = document.getElementById('stat-steps');
+                if (ss) ss.textContent = d.done_steps || '0';
+                var sl = document.getElementById('stat-ledger');
+                if (sl) sl.textContent = (d.ledger_entries || 0).toLocaleString();
+                var sw = document.getElementById('stat-sweeps');
+                if (sw) sw.textContent = d.sweeps_total || '0';
+            })
+            .catch(function() {});
+    })();
     function handleSubscribe(e) {
         e.preventDefault();
         var email = document.getElementById('subscribe-email').value;
