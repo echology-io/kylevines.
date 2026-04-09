@@ -29,18 +29,7 @@ body.light {
         linear-gradient(rgba(20, 80, 50, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(20, 80, 50, 0.04) 1px, transparent 1px);
 }
-body.light::after {
-    opacity: 0.15;
-}
-body.light::before {
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 3px,
-        rgba(0, 0, 0, 0.02) 3px,
-        rgba(0, 0, 0, 0.02) 4px
-    );
-}
+/* light mode CRT overrides removed (CRT elements removed) */
 body.light nav {
     background: rgba(240, 237, 230, 0.9);
     border-bottom-color: rgba(204, 200, 190, 0.6);
@@ -80,35 +69,8 @@ body {
     background-position: center center;
 }
 
-/* -- CRT texture overlay --------------------------------- */
-/* Phosphor dot raster — not film grain, cathode ray tube */
-
-body::after {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 9999;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23ffffff' opacity='0.015'/%3E%3Ccircle cx='3' cy='3' r='0.4' fill='%23ffffff' opacity='0.01'/%3E%3C/svg%3E");
-    background-size: 4px 4px;
-}
-
-/* -- Scanlines (thinner, CRT-accurate) ------------------- */
-
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 9998;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 3px,
-        rgba(0, 0, 0, 0.06) 3px,
-        rgba(0, 0, 0, 0.06) 4px
-    );
-}
+/* CRT texture and scanlines removed -- buyer audience is
+   compliance officers and SREs, not terminal enthusiasts. */
 
 a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--fg); }
@@ -123,6 +85,7 @@ a:hover { color: var(--fg); }
     height: 100%;
     z-index: 0;
     pointer-events: none;
+    opacity: 0.3;
 }
 
 /* -- Content layer --------------------------------------- */
