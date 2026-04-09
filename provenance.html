@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Provenance — Kyle Vines</title>
+    <meta name="description" content="File-level hash-chain integrity monitoring. Proves what happened to any file at any point in time. Rust core, desktop app, $10,000/yr.">
+    <meta property="og:title" content="Signal Provenance">
+    <meta property="og:description" content="File-level hash-chain integrity monitoring. 49 Rust tests. 7,012 ledger entries. Runs on your machine.">
+    <meta property="og:type" content="product">
+    <link rel="stylesheet" href="style.css">
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
+</head>
+<body>
+
+    <canvas id="field"></canvas>
+
+    <div id="content">
+
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kylevines<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/blog">Blog</a>
+                    <a href="/machine-map">Machine Map</a>
+                    <a href="/contact">Contact</a>
+                    <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="article-header">
+            <div class="container container--narrow">
+                <div class="article-meta">Signal Provenance</div>
+                <h1>Prove what happened<br><span>to your files.</span></h1>
+            </div>
+        </section>
+
+        <section class="article-body">
+            <div class="container container--narrow">
+
+                <h2>What it is</h2>
+
+                <p>Signal Provenance is file-level hash-chain integrity monitoring. Every file operation, every change, every access gets a cryptographic hash chained to the previous entry. The result is a tamper-evident ledger that proves what happened to any file at any point in time.</p>
+
+                <p>Rust core. Tauri desktop app. Runs on your machine. No cloud. No data leaves the building.</p>
+
+                <h2>What problem it solves</h2>
+
+                <p>The EU AI Act (Article 12, effective August 2, 2026) mandates automatic event logging for high-risk AI systems. Article 15 mandates cybersecurity resilience. Neither explicitly requires cryptographic log integrity. But the combination of Articles 12, 15, and 73 (forensic evidence preservation) makes hash-chained, tamper-evident logs the economically rational implementation.</p>
+
+                <p>Beyond compliance: any team that needs to prove what happened to their files, when, and by whom. Legal discovery. Audit trails. Forensic investigation. Regulatory submissions.</p>
+
+                <h2>Evidence</h2>
+
+                <table>
+                    <tr><th>Claim</th><th>Value</th></tr>
+                    <tr><td>Rust test suite</td><td>49 tests passing (39 core + 5 cross-impl + 2 encryption + 3 license)</td></tr>
+                    <tr><td>Hash-chained ledger</td><td>7,012 entries, chain VALID</td></tr>
+                    <tr><td>macOS binary</td><td>14MB arm64, codesigned + notarized + stapled</td></tr>
+                    <tr><td>Linux binary</td><td>17MB</td></tr>
+                    <tr><td>Self-referential deployment</td><td>Signal Provenance monitors the codebase that builds Signal Provenance</td></tr>
+                    <tr><td>Compliance frameworks</td><td>EU AI Act, FDA 21 CFR 11, HIPAA, CMMC, ISO 27001, SOX 404</td></tr>
+                    <tr><td>Price</td><td>$10,000/yr</td></tr>
+                </table>
+
+                <p>Every number above is sourced. The test count is from <code>cargo test</code>. The ledger count is from the production database. The binary sizes are from the build artifacts on disk. I built it. I run it. I can show you every line.</p>
+
+                <h2>What exists in this space</h2>
+
+                <p>VeritasChain (VCP v1.1) provides cryptographic audit trails for algorithmic trading. RFC 6962 Merkle trees, Ed25519 signatures. Trading-specific.</p>
+
+                <p>TrueScreen provides forensic-grade digital provenance at point of content creation. eIDAS-compliant qualified timestamps. Content-capture-specific.</p>
+
+                <p>Neither provides continuous, local-first, file-level monitoring as a downloadable desktop app at $10,000/yr. The difference is in the delivery model and price tier, not the concept of cryptographic integrity.</p>
+
+                <h2>How to get it</h2>
+
+                <p>Contact me. I'll walk you through what it does, show you the ledger, run a demo on your files. If it fits, you'll have a desktop app running on your machine within a week.</p>
+
+                <div style="text-align: center; margin: 40px 0;">
+                    <a href="/contact" class="btn btn-primary" onclick="if(window.plausible){plausible('CTA-Click', {props:{product:'provenance'}})}">Get in touch</a>
+                </div>
+
+                <h2>Related reading</h2>
+
+                <ul>
+                    <li><a href="https://echology.io/methodology/electronic-signatures-without-a-vendor/">Electronic Signatures Without a Vendor</a></li>
+                    <li><a href="https://echology.io/methodology/six-frameworks-one-chain/">Six Frameworks, One Chain</a></li>
+                </ul>
+
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://echology.io">Echology</a>
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="field.js"></script>
+    <script>
+    function toggleMode() {
+        var isLight = document.body.classList.toggle('light');
+        var btn = document.querySelector('.mode-toggle');
+        btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+        localStorage.setItem('mode', isLight ? 'light' : 'dark');
+    }
+    (function() {
+        if (localStorage.getItem('mode') === 'light') {
+            document.body.classList.add('light');
+            var btn = document.querySelector('.mode-toggle');
+            if (btn) btn.innerHTML = '&#9788;';
+        }
+    })();
+    </script>
+</body>
+</html>

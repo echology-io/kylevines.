@@ -9,6 +9,7 @@
     <meta property="og:description" content="13 years inside engineering firms. Every one had the same problem: documents with legal weight being processed by people who didn't have time to read them.">
     <meta property="og:type" content="article">
     <link rel="stylesheet" href="../style.css">
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
 </head>
 <body>
 
@@ -55,19 +56,19 @@
 
                 <p>The problem isn't the model. The problem is what you're feeding it. There's a structural step before reasoning that almost nobody is doing: classification. Before any document touches a model, it should be decomposed into classified semantic units. Each unit gets an authority level, a risk category, and an attention score.</p>
 
-                <p>Section 4 &mdash; Safety Requirements &mdash; scores 8.0. Section 6 &mdash; Background &mdash; scores 0.1. Now your model reads 30 pages instead of 200. And it reads the right 30 pages.</p>
+                <p>Section 4, Safety Requirements, scores 8.0. Section 6, Background, scores 0.1. Now your model reads 30 pages instead of 200. And it reads the right 30 pages.</p>
 
                 <h2>What I built</h2>
 
-                <p>AECai is a 17-system document intelligence platform. Classification, decomposition, verification, retrieval, audit. Runs entirely on local hardware. No cloud. No data leaving the building. For the industries I serve &mdash; architecture, engineering, construction &mdash; that's not a preference, it's a requirement.</p>
+                <p>Echology is a document intelligence platform. Classification, decomposition, verification, retrieval, audit. Runs entirely on local hardware. No cloud. No data leaving the building. For the industries I serve, that's not a preference, it's a requirement.</p>
 
-                <p>The core of it &mdash; the structural step that breaks text into classified semantic units &mdash; I open-sourced as <a href="https://echology.io/decompose">Decompose</a>. Free. Deterministic. No LLM required. Because the decomposition step teaches the architecture. If you understand what Decompose does, you understand the design pattern behind everything we build at <a href="https://echology.io">Echology</a>.</p>
+                <p>The core of it, the structural step that breaks text into classified semantic units, I open-sourced as <a href="https://github.com/echology-io/decompose">Decompose</a>. Free. Deterministic. No LLM required. Because the decomposition step teaches the architecture. If you understand what Decompose does, you understand the design pattern behind everything we build at <a href="https://echology.io">Echology</a>.</p>
 
                 <p>Structure before reasoning. Classification before generation. Deterministic preprocessing before probabilistic inference.</p>
 
                 <h2>Why now</h2>
 
-                <p>I'm building this from Charleston, SC. The tools I needed didn't exist, so I built them. The pattern I kept seeing &mdash; teams throwing raw content at AI and getting unreliable results &mdash; isn't going away. It's getting worse as adoption accelerates.</p>
+                <p>I'm building this from Charleston, SC. The tools I needed didn't exist, so I built them. The pattern I kept seeing, teams throwing raw content at AI and getting unreliable results, isn't going away. It's getting worse as adoption accelerates.</p>
 
                 <p>The answer isn't better models. The answer is better input. That's the gap I work in. That's why I build.</p>
             </div>
@@ -78,8 +79,6 @@
                 <div class="copy">&copy; 2026 Kyle Vines</div>
                 <div class="footer-links">
                     <a href="https://echology.io">Echology</a>
-                    <a href="https://aecai.io">AECai</a>
-                    <a href="https://geode.digital">Geode</a>
                     <a href="https://github.com/echology-io">GitHub</a>
                     <a href="/contact">Contact</a>
                 </div>

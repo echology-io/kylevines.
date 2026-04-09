@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Happened to Your Files While You Weren't Looking — Kyle Vines</title>
+    <meta name="description" content="I pointed a hash-chain monitor at my own AI agent. Here's what it found.">
+    <meta property="og:title" content="What Happened to Your Files While You Weren't Looking">
+    <meta property="og:description" content="I pointed a hash-chain monitor at my own AI agent. Here's what it found.">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../style.css">
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
+</head>
+<body>
+
+    <canvas id="field"></canvas>
+
+    <div id="content">
+
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kylevines<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/blog" class="active">Blog</a>
+                    <a href="/contact">Contact</a>
+                    <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="article-header">
+            <div class="container container--narrow">
+                <div class="article-meta">April 2026 &middot; <span class="article-tag">provenance</span></div>
+                <h1>What Happened to Your Files While You Weren't Looking</h1>
+            </div>
+        </section>
+
+        <section class="article-body">
+            <div class="container container--narrow">
+                <p>I use Claude Code as my primary development tool. It reads files, writes files, runs commands. It's good at its job. But here's the thing: by default, there is zero record of what it actually did to your filesystem.</p>
+
+                <p>Git blame shows the final state. It doesn't show the sequence. It doesn't show which files were read before which were written. It doesn't show the three files that were modified and then reverted during the same session. It doesn't show the bash command that ran between edits.</p>
+
+                <p>I wanted to see the full picture. So I pointed Signal Provenance at my own working directory and let it run for three weeks.</p>
+
+                <h2>What the chain recorded</h2>
+
+                <p>2,365 witness entries across 21 sessions. Every file read, every file write, every tool call. Each entry hash-chained to the previous one with SHA-256. Median overhead per operation: 128 milliseconds.</p>
+
+                <p>The ledger is a SQLite database. Each row contains: timestamp, event type, file path, content hash, previous chain hash, and a JSON payload with the operation details. The chain is append-only. You can verify the entire history by rehashing from the first entry forward. If any row was modified or deleted, every subsequent hash breaks.</p>
+
+                <h2>What I found</h2>
+
+                <p>The interesting part wasn't the normal operations. It was the gaps.</p>
+
+                <p><strong>Layer 0 (raw Claude Code, no hooks):</strong> No provenance at all. The agent says "I read the file before editing it." There is no way to verify that claim. Foundation Value III, provenance over assertion, is entirely absent.</p>
+
+                <p><strong>Layer 1 (Foundation Gate hooks):</strong> I wrote a 532-line Python hook that fires on every tool call. It enforces read-before-write. It scans for PII before file writes. It blocks destructive bash patterns (<code>rm -rf</code>, <code>DROP TABLE</code>, <code>git push --force</code>). And it witnesses every operation to the hash chain.</p>
+
+                <p>Result: 23 PII warnings caught in 19 hours. 4 destructive commands blocked. Every operation traceable.</p>
+
+                <p><strong>Layer 2 (hooks + MCP domain tools):</strong> The agent gets structured access to operational data through MCP tools instead of raw SQL queries. Every tool call is witnessed. The agent cannot bypass the provenance layer because it accesses data through the tools, not directly.</p>
+
+                <h2>The compliance angle</h2>
+
+                <p>The EU AI Act Article 12 requires automatic event logging for high-risk AI systems. Article 15 requires cybersecurity resilience. Article 73 requires forensic evidence preservation. None of them explicitly mandate cryptographic log integrity.</p>
+
+                <p>But if your logs can be silently modified after the fact, they are not evidence. They are assertions. The combination of Articles 12, 15, and 73 makes hash-chained, tamper-evident logs the economically rational implementation. Not because the regulation says "use SHA-256." Because the regulation says "prove it happened," and a mutable log cannot prove anything.</p>
+
+                <h2>What this means for AI agents</h2>
+
+                <p>Every company deploying AI agents will eventually need to answer the question: what did the agent do? Not what did the agent say it did. What actually happened to the files, the database, the API calls.</p>
+
+                <p>Git is insufficient. Application logs are mutable. The gap is a tamper-evident, append-only chain that witnesses every operation as it occurs.</p>
+
+                <p>That's what <a href="/provenance">Signal Provenance</a> does. 49 Rust tests. 7,012 entries in production. 128ms median overhead. Running on my own infrastructure, monitoring my own AI agent, generating the data for this post.</p>
+
+                <p>The full case study with Layer 0-4 progression and measured performance data is available for compliance teams evaluating this approach. <a href="/contact">Get in touch</a>.</p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://echology.io">Echology</a>
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../field.js"></script>
+    <script>
+    function toggleMode() {
+        var isLight = document.body.classList.toggle('light');
+        var btn = document.querySelector('.mode-toggle');
+        btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+        localStorage.setItem('mode', isLight ? 'light' : 'dark');
+    }
+    (function() {
+        if (localStorage.getItem('mode') === 'light') {
+            document.body.classList.add('light');
+            var btn = document.querySelector('.mode-toggle');
+            if (btn) btn.innerHTML = '&#9788;';
+        }
+    })();
+    </script>
+</body>
+</html>

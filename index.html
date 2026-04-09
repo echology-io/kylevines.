@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kyle Vines</title>
-    <meta name="description" content="Kyle Vines — builder, thinker, founder. Software, faith, physics, ancient patterns, and the architecture of understanding.">
+    <meta name="description" content="Two products. Same builder. Same analytics. The market decides which one wins.">
     <meta property="og:title" content="Kyle Vines">
-    <meta property="og:description" content="Builder, thinker, founder. Connecting patterns across code, faith, physics, and ancient wisdom.">
+    <meta property="og:description" content="Two products. Same builder. Same analytics. The market decides which one wins.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kylevines.com">
     <link rel="stylesheet" href="style.css">
-    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.js"></script>
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
 </head>
 <body>
 
-    <!-- The field: waves that live behind everything -->
     <canvas id="field"></canvas>
 
     <div id="content">
@@ -35,30 +34,65 @@
         </nav>
 
         <div class="hero">
-            <div class="container">
-                <h1>Resonant<br><span>intelligence.</span></h1>
-                <p class="sub">I build software, study systems, and look for the threads that connect things most people keep in separate rooms.</p>
-                <div class="btn-group">
-                    <a href="/blog" class="btn btn-primary">Read the Blog</a>
-                    <a href="/about" class="btn btn-outline">About Me</a>
-                </div>
+            <div class="container container--narrow">
+                <h1>Two products.<br><span>One experiment.</span></h1>
+                <p class="sub">I spent 13 years inside engineering firms. I ran one. I left to build something different.</p>
             </div>
         </div>
 
-        <div class="whisper">
-            <p id="whisper-text">Everything resonates. The work is learning where to listen.</p>
-        </div>
+        <section class="writing-section">
+            <div class="container container--narrow">
+                <div class="article-body">
+                    <p>I spent a year building with AI. Solved my own problems along the way. Tracked everything. 176 initiatives. $1,772 in infrastructure. Zero revenue.</p>
 
-        <div class="writing-section">
+                    <p>I ended up with two things worth sharing.</p>
+
+                    <p>One proves what happened to your files. The other finds hidden connections in your systems.</p>
+
+                    <p>I don't know which one the market wants. So I'm running both side by side. Same site. Same analytics. Same builder. The market decides.</p>
+
+                    <p>Here's what I'll be sharing along the way: everything I learned.</p>
+                </div>
+
+                <div class="card-grid" style="margin-top: 48px;">
+                    <a href="/provenance" class="card" style="text-decoration:none">
+                        <div class="tag">Compliance</div>
+                        <h3>Signal Provenance</h3>
+                        <p>File-level hash-chain integrity monitoring. Proves what happened to any file at any point in time. Rust core, desktop app, runs on your machine. $10,000/yr.</p>
+                        <span class="card-link">See the evidence &rarr;</span>
+                    </a>
+                    <a href="/sympatheia" class="card" style="text-decoration:none">
+                        <div class="tag">Observability</div>
+                        <h3>Sympatheia</h3>
+                        <p>Domain-agnostic coupling detection from passive metrics. Finds hidden dependencies in distributed systems. No agents, no credentials, read-only. Free audit.</p>
+                        <span class="card-link">See the evidence &rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="writing-section">
             <div class="container container--narrow">
                 <p class="section-label">Writing</p>
-                <div class="writing-lead">Thinking out loud.</div>
-                <p class="writing-sub">Notes from the intersection of building, believing, and trying to understand how things actually work.</p>
+                <div class="writing-lead">Building in public.</div>
+                <p class="writing-sub">Lessons, frameworks, data, mistakes. Everything from a year of building with AI.</p>
                 <div class="post-list">
-                    <a href="/blog/why-i-build" class="post-item">
-                        <div class="post-date">February 2026</div>
-                        <div class="post-title">Why I Build</div>
-                        <div class="post-excerpt">On starting Echology, building in public, and why document intelligence matters more than people think.</div>
+                    <a href="/blog/the-experiment" class="post-item">
+                        <div class="post-date">April 2026</div>
+                        <div class="post-title">The Experiment</div>
+                        <div class="post-excerpt">Two products. Same site. Same analytics. I don't know which one the market wants. So I'm running both side by side.</div>
+                        <span class="read-more">Read &rarr;</span>
+                    </a>
+                    <a href="/blog/what-happened-to-your-files" class="post-item">
+                        <div class="post-date">April 2026</div>
+                        <div class="post-title">What Happened to Your Files While You Weren't Looking</div>
+                        <div class="post-excerpt">I pointed a hash-chain monitor at my own AI agent. 2,365 witness entries. Here's what it found.</div>
+                        <span class="read-more">Read &rarr;</span>
+                    </a>
+                    <a href="/blog/your-monitoring-tool-cant-detect-coupling" class="post-item">
+                        <div class="post-date">April 2026</div>
+                        <div class="post-title">Your Monitoring Tool Can't Detect Coupling</div>
+                        <div class="post-excerpt">9,591 services analyzed. 1.71x spectral coherence ratio. Your dependency map doesn't know this.</div>
                         <span class="read-more">Read &rarr;</span>
                     </a>
                 </div>
@@ -66,47 +100,27 @@
                     <a href="/blog" class="btn btn-outline">All Posts</a>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="projects-section">
-            <div class="container">
-                <p class="section-label">Projects</p>
-                <div class="card-grid">
-                    <a href="https://echology.io" class="card" style="text-decoration:none">
-                        <div class="tag">Company</div>
-                        <h3>Echology</h3>
-                        <p>AI-powered document intelligence platform. Deterministic classification, structural retrieval, provenance tracking. Local-first.</p>
-                        <span class="card-link">echology.io &rarr;</span>
-                    </a>
-                    <a href="https://aecai.io" class="card" style="text-decoration:none">
-                        <div class="tag">Platform</div>
-                        <h3>AECai</h3>
-                        <p>Document intelligence for Architecture, Engineering, and Construction. Full pipeline: parse, classify, enrich, decompose, index. On your hardware.</p>
-                        <span class="card-link">aecai.io &rarr;</span>
-                    </a>
-                    <a href="https://echology.io/decompose" class="card" style="text-decoration:none">
-                        <div class="tag">Open Source</div>
-                        <h3>Decompose</h3>
-                        <p>Deterministic text classification for AI agents. Extracted from AECai, released standalone. No LLM required. Free.</p>
-                        <span class="card-link">Learn more &rarr;</span>
-                    </a>
-                    <a href="https://geode.digital" class="card" style="text-decoration:none">
-                        <div class="tag">Service</div>
-                        <h3>Geode</h3>
-                        <p>Generative Engine Optimization. Making organizational expertise citable by AI systems like ChatGPT, Perplexity, and Google AI.</p>
-                        <span class="card-link">geode.digital &rarr;</span>
-                    </a>
-                </div>
+        <section>
+            <div class="container container--narrow" style="text-align:center; padding: 60px 0 40px;">
+                <p class="section-label">Follow the experiment</p>
+                <p style="color: var(--muted); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; margin-bottom: 20px;">
+                    Monthly update. What the data shows. What I learned. No spam.
+                </p>
+                <form id="subscribe-form" onsubmit="return handleSubscribe(event)" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 480px; margin: 0 auto;">
+                    <input type="email" id="subscribe-email" name="email" placeholder="your@email.com" required style="flex: 1; min-width: 220px; padding: 10px 16px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 1px; color: var(--fg); font-size: 14px; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;">
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+                <p id="subscribe-msg" style="color: var(--accent); font-size: 13px; margin-top: 12px; display: none;"></p>
             </div>
-        </div>
+        </section>
 
         <footer>
             <div class="container">
                 <div class="copy">&copy; 2026 Kyle Vines</div>
                 <div class="footer-links">
                     <a href="https://echology.io">Echology</a>
-                    <a href="https://aecai.io">AECai</a>
-                    <a href="https://geode.digital">Geode</a>
                     <a href="https://github.com/echology-io">GitHub</a>
                     <a href="/contact">Contact</a>
                 </div>
@@ -117,6 +131,34 @@
 
     <script src="field.js"></script>
     <script>
+    function handleSubscribe(e) {
+        e.preventDefault();
+        var email = document.getElementById('subscribe-email').value;
+        var msg = document.getElementById('subscribe-msg');
+        var btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = '...';
+        fetch('https://ops.echology.io/api/subscribe', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email: email, source: 'homepage'})
+        }).then(function(r) { return r.json(); }).then(function(data) {
+            if (data.status === 'already_subscribed') {
+                msg.textContent = 'You are already subscribed.';
+            } else {
+                msg.textContent = 'Subscribed. Monthly update incoming.';
+            }
+            msg.style.display = 'block';
+            btn.textContent = 'Subscribed';
+            if (window.plausible) { plausible('Subscribe', {props: {source: 'homepage'}}); }
+        }).catch(function() {
+            msg.textContent = 'Something went wrong. Email kyle@echology.io directly.';
+            msg.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Subscribe';
+        });
+        return false;
+    }
     function toggleMode() {
         var isLight = document.body.classList.toggle('light');
         var btn = document.querySelector('.mode-toggle');

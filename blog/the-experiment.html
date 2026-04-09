@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Experiment — Kyle Vines</title>
+    <meta name="description" content="Two products. Same site. Same analytics. The market decides which one wins.">
+    <meta property="og:title" content="The Experiment">
+    <meta property="og:description" content="I built two products in a year. I don't know which one the market wants. So I'm running them side by side.">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../style.css">
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
+</head>
+<body>
+
+    <canvas id="field"></canvas>
+
+    <div id="content">
+
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kylevines<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/blog" class="active">Blog</a>
+                    <a href="/contact">Contact</a>
+                    <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="article-header">
+            <div class="container container--narrow">
+                <div class="article-meta">April 2026 &middot; <span class="article-tag">experiment</span></div>
+                <h1>The Experiment</h1>
+            </div>
+        </section>
+
+        <section class="article-body">
+            <div class="container container--narrow">
+                <p>I spent a year building with AI. Not using it. Building with it. Claude Code as my primary development tool. Every decision tracked in a SQLite database. Every initiative numbered.</p>
+
+                <p>I started with a document intelligence problem I'd watched go unsolved for 13 years. Along the way, I solved a second problem I didn't know I had. Now I have two products and no idea which one the market wants.</p>
+
+                <p>So I'm running an experiment.</p>
+
+                <h2>The two products</h2>
+
+                <p><strong><a href="/provenance">Signal Provenance</a></strong> monitors files with a hash chain. Every file gets a SHA-256 hash. Every hash links to the previous one. If anything changes, the chain shows exactly what, when, and in what order. Rust core. Desktop app. Runs on your machine. $10,000/yr.</p>
+
+                <p>The use case: EU AI Act Articles 12 and 15 require logging and integrity for high-risk AI systems. Most companies are going to need tamper-evident audit trails. Signal Provenance builds them automatically from any directory on disk.</p>
+
+                <p>Current state: 49 Rust tests passing. 7,012 ledger entries on my production machine. macOS binary signed, notarized, and stapled. Running in production on my own infrastructure for 3 months.</p>
+
+                <p><strong><a href="/sympatheia">Sympatheia</a></strong> finds hidden dependencies in distributed systems from passive metrics. No agents to install. No credentials required. Read-only analysis. It uses spectral coherence to detect which services are coupled, how strongly, and which ones drive the behavior of others.</p>
+
+                <p>The use case: your monitoring tool shows you individual service health. Sympatheia shows you which services are structurally connected in ways your dependency map doesn't capture. When Service A degrades, it tells you Service C will feel it 3 minutes later, even though they don't directly communicate.</p>
+
+                <p>Current state: 9,591 services analyzed across experiments. Co-located services show 1.71x higher spectral coherence (p < 10<sup>-233</sup>). Connected services show 13.21x higher latency correlation. Free audit.</p>
+
+                <h2>The rules</h2>
+
+                <p>Same site. Same design. Same analytics. Same builder. No A/B testing tricks. No differential pricing gimmicks. Both products get equal content investment. The market tells me which one matters.</p>
+
+                <p>I'll publish everything I learn. The page views. The contact form submissions. Which channels drive which product interest. What content resonates and what falls flat. If one product gets 3x the engagement after 30 days, that's my signal.</p>
+
+                <h2>Why public</h2>
+
+                <p>Two reasons.</p>
+
+                <p>First, I've tracked 176 initiatives and spent $1,772 in infrastructure over the past year with zero revenue. I have a lot of data about what it takes to build two products from scratch with AI. That data is worth sharing regardless of which product wins.</p>
+
+                <p>Second, I'm a solo founder. Building in public is the only distribution channel that compounds. Every post is a data point. Every framework I share is a potential citation. The experiment itself is the content.</p>
+
+                <h2>What's next</h2>
+
+                <p>Weekly blog posts. Each one teaches something concrete from the build. Provenance thread. Sympatheia thread. Infrastructure decisions. Mistakes. Numbers.</p>
+
+                <p>If you want the monthly summary of what the data shows, there's a subscribe form on the <a href="/">homepage</a>.</p>
+
+                <p>Let's see what the market says.</p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://echology.io">Echology</a>
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../field.js"></script>
+    <script>
+    function toggleMode() {
+        var isLight = document.body.classList.toggle('light');
+        var btn = document.querySelector('.mode-toggle');
+        btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+        localStorage.setItem('mode', isLight ? 'light' : 'dark');
+    }
+    (function() {
+        if (localStorage.getItem('mode') === 'light') {
+            document.body.classList.add('light');
+            var btn = document.querySelector('.mode-toggle');
+            if (btn) btn.innerHTML = '&#9788;';
+        }
+    })();
+    </script>
+</body>
+</html>

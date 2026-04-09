@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sympatheia — Kyle Vines</title>
+    <meta name="description" content="Domain-agnostic coupling detection from passive metrics. Finds hidden dependencies in distributed systems. No agents, no credentials, read-only.">
+    <meta property="og:title" content="Sympatheia">
+    <meta property="og:description" content="Coupling detection from passive metrics. 9,591 services analyzed. 1.71x coherence ratio, p < 10^-233.">
+    <meta property="og:type" content="product">
+    <link rel="stylesheet" href="style.css">
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
+</head>
+<body>
+
+    <canvas id="field"></canvas>
+
+    <div id="content">
+
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kylevines<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/blog">Blog</a>
+                    <a href="/machine-map">Machine Map</a>
+                    <a href="/contact">Contact</a>
+                    <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="article-header">
+            <div class="container container--narrow">
+                <div class="article-meta">Sympatheia</div>
+                <h1>Find the connections<br><span>your tools can't see.</span></h1>
+            </div>
+        </section>
+
+        <section class="article-body">
+            <div class="container container--narrow">
+
+                <h2>What it is</h2>
+
+                <p>Sympatheia detects hidden coupling between components in any system that produces time-series data. It uses spectral coherence, cross-correlation, and transfer entropy to infer which components are connected, how strongly, and which are at risk when one degrades.</p>
+
+                <p>No agents to install. No credentials to manage. Read-only analysis on metrics you already collect.</p>
+
+                <h2>What problem it solves</h2>
+
+                <p>Your dependency map is wrong. Every service dependency tool requires either agents on every host, credentials to every system, or APM instrumentation across your stack. They show you what they can see. They miss what they can't instrument.</p>
+
+                <p>Sympatheia works from the outside. If two services are coupled, their metrics show it. Spectral coherence detects shared oscillation patterns. Cross-correlation measures response propagation. Transfer entropy identifies direction. No access required. Just metrics.</p>
+
+                <h2>Evidence</h2>
+
+                <table>
+                    <tr><th>Finding</th><th>Numbers</th></tr>
+                    <tr><td>Co-located services have higher spectral coherence</td><td>1.71x ratio, p &lt; 10<sup>-233</sup></td></tr>
+                    <tr><td>Connected services have higher latency correlation</td><td>13.21x ratio, p = 0</td></tr>
+                    <tr><td>Upstream spikes predict downstream spikes</td><td>9.63x lag-1 cross-correlation</td></tr>
+                    <tr><td>Anomalies propagate along coupling edges</td><td>1.43x propagation rate</td></tr>
+                    <tr><td>Detection drops from 90% to 0% below 15-min sampling</td><td>Calibrated across 20 trials per condition</td></tr>
+                    <tr><td>Transfer entropy detects coupling direction</td><td>1.30x ratio, p &lt; 10<sup>-77</sup></td></tr>
+                    <tr><td>Scale tested</td><td>9,591 services, 384K pairs, 352K anomaly events</td></tr>
+                </table>
+
+                <p>These numbers come from four experiments on Alibaba production traces. The same math that detects coupling in microservices detects coupling in chemical manufacturing lines, HVAC systems, and any domain with time-series sensor data.</p>
+
+                <h2>What is not proven</h2>
+
+                <p>That acting on coupling information improves operations. The detection works. The diagnostic value is demonstrated. The intervention experiment has not been run. This is honest: Sympatheia tells you where the connections are. Whether knowing that makes your system better is what we need to find out together.</p>
+
+                <h2>What exists in this space</h2>
+
+                <table>
+                    <tr><th>Tool</th><th>Method</th><th>Limitation</th></tr>
+                    <tr><td>Dynatrace SmartScape</td><td>Agent-based</td><td>Requires agent on every host</td></tr>
+                    <tr><td>ServiceNow Service Mapping</td><td>Credential-based scan</td><td>Requires credentials vault</td></tr>
+                    <tr><td>Faddom</td><td>Network traffic analysis</td><td>Limited app-layer depth, $15-30K/yr</td></tr>
+                    <tr><td>Datadog Service Map</td><td>APM trace analysis</td><td>Requires APM instrumentation</td></tr>
+                </table>
+
+                <p>No shipping product uses spectral or statistical methods for dependency discovery from passive metrics.</p>
+
+                <h2>How to get it</h2>
+
+                <p>Start with a free coupling audit. Send me a metrics export (CSV, Prometheus, any format). I'll run the analysis and show you what's coupled. If the results are useful, we'll talk about ongoing monitoring.</p>
+
+                <ul>
+                    <li>Free coupling audit</li>
+                    <li>$2,000-5,000/mo continuous monitoring</li>
+                    <li>$100-300K/yr enterprise</li>
+                </ul>
+
+                <div style="text-align: center; margin: 40px 0;">
+                    <a href="/contact" class="btn btn-primary" onclick="if(window.plausible){plausible('CTA-Click', {props:{product:'sympatheia'}})}">Request a free audit</a>
+                </div>
+
+                <h2>Python library</h2>
+
+                <p>The core detection algorithms are available as a Python library. v0.1.0. Six modules: coherence, correlation, transfer entropy, graph analysis, preprocessing, statistics.</p>
+
+<pre><code>from sympatheia import coherence_matrix, build_coupling_graph
+
+# Detect coupling from any time-series DataFrame
+coh = coherence_matrix(df, fs=1/60)  # 1-minute sampling
+graph = build_coupling_graph(coh, threshold=0.3)
+</code></pre>
+
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://echology.io">Echology</a>
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="field.js"></script>
+    <script>
+    function toggleMode() {
+        var isLight = document.body.classList.toggle('light');
+        var btn = document.querySelector('.mode-toggle');
+        btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+        localStorage.setItem('mode', isLight ? 'light' : 'dark');
+    }
+    (function() {
+        if (localStorage.getItem('mode') === 'light') {
+            document.body.classList.add('light');
+            var btn = document.querySelector('.mode-toggle');
+            if (btn) btn.innerHTML = '&#9788;';
+        }
+    })();
+    </script>
+</body>
+</html>

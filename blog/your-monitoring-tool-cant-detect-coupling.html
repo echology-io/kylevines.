@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Monitoring Tool Can't Detect Coupling — Kyle Vines</title>
+    <meta name="description" content="We analyzed 9,591 services. Co-located services have 1.71x higher spectral coherence. Your dependency map doesn't know this.">
+    <meta property="og:title" content="Your Monitoring Tool Can't Detect Coupling">
+    <meta property="og:description" content="We analyzed 9,591 services. Co-located services have 1.71x higher spectral coherence. Your dependency map doesn't know this.">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../style.css">
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
+</head>
+<body>
+
+    <canvas id="field"></canvas>
+
+    <div id="content">
+
+        <nav>
+            <div class="container">
+                <a href="/" class="logo">kylevines<span>.</span></a>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/about">About</a>
+                    <a href="/blog" class="active">Blog</a>
+                    <a href="/contact">Contact</a>
+                    <button class="mode-toggle" onclick="toggleMode()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">&#9789;</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="article-header">
+            <div class="container container--narrow">
+                <div class="article-meta">April 2026 &middot; <span class="article-tag">sympatheia</span></div>
+                <h1>Your Monitoring Tool Can't Detect Coupling</h1>
+            </div>
+        </section>
+
+        <section class="article-body">
+            <div class="container container--narrow">
+                <p>Your monitoring tool knows that Service A is slow. It might know that Service B called Service A. But it doesn't know that Service A and Service C are structurally coupled through a shared resource neither team documented.</p>
+
+                <p>That's the gap. Not "what is slow right now" but "what will break next, and why."</p>
+
+                <h2>What coupling actually means</h2>
+
+                <p>Two services are coupled when their behavior is statistically correlated over time. Not because one calls the other. Because they share a resource, a scheduler, a network path, a database connection pool, or some other structural relationship that doesn't appear in your service map.</p>
+
+                <p>Coupling is invisible to tools that work from configuration, traces, or agent instrumentation. Those tools see declared relationships. Coupling is the undeclared kind.</p>
+
+                <h2>How we detect it</h2>
+
+                <p>Spectral coherence. The same technique process control engineers have used for decades to find coupled oscillations in chemical plants and power grids.</p>
+
+                <p>Take two time-series (CPU utilization, latency, error rate, anything). Decompose each into frequency components using Welch's method. Compute how much the frequency components agree between the two series. If they share the same frequencies at the same times, they are coupled. The coherence score is between 0 (independent) and 1 (perfectly coupled).</p>
+
+                <p>No agents. No credentials. No instrumentation changes. Read-only analysis of metrics you already collect.</p>
+
+                <h2>What we found</h2>
+
+                <p>We ran this against the Alibaba Cluster Trace 2018. 9,591 services. 24,415 service pairs. 8 days of telemetry.</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Finding</th><th>Number</th><th>Significance</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Co-located services have higher spectral coherence</td><td>1.71x ratio</td><td>p < 10<sup>-233</sup></td></tr>
+                        <tr><td>Connected services have higher latency correlation</td><td>13.21x ratio</td><td>p = 0</td></tr>
+                        <tr><td>Upstream spikes predict downstream spikes</td><td>9.63x lag-1 cross-correlation</td><td>Directional</td></tr>
+                        <tr><td>Anomalies propagate along coupling edges</td><td>1.43x propagation rate</td><td>352K events</td></tr>
+                    </tbody>
+                </table>
+
+                <p>The co-location finding matters most. Services running on the same physical or virtual host share temporal behavior at 1.71x the rate of services on different hosts. Your infrastructure topology is leaking into your application behavior, and your monitoring tool doesn't show it.</p>
+
+                <h2>The sampling rate cliff</h2>
+
+                <p>We also found a hard threshold that nobody talks about.</p>
+
+                <p>At 1-minute sampling intervals, detection accuracy is 90%. At 5 minutes, it drops to 70%. At 15 minutes, it drops to zero. The coupling signal disappears entirely.</p>
+
+                <p>If your metrics are collected at 15-minute intervals (common in cost-conscious setups), you cannot detect coupling with any method. The information is destroyed at collection time. No amount of algorithmic sophistication recovers it.</p>
+
+                <p>This is a calibrated threshold from 20 controlled trials per condition. It's not a recommendation. It's a measurement.</p>
+
+                <h2>What this doesn't prove</h2>
+
+                <p>I want to be direct about what the data does not show.</p>
+
+                <p>We have not proven that acting on coupling information improves operations. We have diagnosis, not treatment. The intervention experiment has not been run. We cannot yet say "knowing your coupling structure reduces incidents by X%."</p>
+
+                <p>What we can say: the structure is real, it's persistent (72.9% stability across a 2-day gap), it's invisible to existing tools, and it's discoverable from metrics you already collect.</p>
+
+                <p>Whether knowing the structure is actionable is the next experiment.</p>
+
+                <h2>Try it</h2>
+
+                <p><a href="/sympatheia">Sympatheia</a> runs a free coupling audit on your environment. You send us your Prometheus/Datadog/CloudWatch metrics export. We return a coupling graph showing which services are structurally related, how strongly, and which one is the temporal driver.</p>
+
+                <p>No agents installed. No credentials shared. Read-only. The audit takes about 4 hours. <a href="/contact">Request one</a>.</p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="copy">&copy; 2026 Kyle Vines</div>
+                <div class="footer-links">
+                    <a href="https://echology.io">Echology</a>
+                    <a href="https://github.com/echology-io">GitHub</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="../field.js"></script>
+    <script>
+    function toggleMode() {
+        var isLight = document.body.classList.toggle('light');
+        var btn = document.querySelector('.mode-toggle');
+        btn.innerHTML = isLight ? '&#9788;' : '&#9789;';
+        localStorage.setItem('mode', isLight ? 'light' : 'dark');
+    }
+    (function() {
+        if (localStorage.getItem('mode') === 'light') {
+            document.body.classList.add('light');
+            var btn = document.querySelector('.mode-toggle');
+            if (btn) btn.innerHTML = '&#9788;';
+        }
+    })();
+    </script>
+</body>
+</html>

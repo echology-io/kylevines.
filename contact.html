@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact — Kyle Vines</title>
-    <meta name="description" content="Get in touch with Kyle Vines. Business inquiries, collaboration, or just say hello.">
+    <meta name="description" content="Get in touch with Kyle Vines. Signal Provenance, Sympatheia, collaboration, or just say hello.">
     <link rel="stylesheet" href="style.css">
+    <script defer data-domain="kylevines.com" src="https://plausible.io/js/script.tagged-events.js"></script>
 </head>
 <body>
 
@@ -31,7 +32,7 @@
         <section class="hero">
             <div class="container container--narrow">
                 <h1>Get in<br><span>touch.</span></h1>
-                <p class="sub">Business inquiries, collaboration ideas, or just saying hello — I'd like to hear from you.</p>
+                <p class="sub">Signal Provenance, Sympatheia, collaboration, or just saying hello.</p>
             </div>
         </section>
 
@@ -49,7 +50,8 @@
                     <div class="form-group">
                         <label for="subject">Subject</label>
                         <select id="subject" name="subject">
-                            <option value="Business Inquiry">Business Inquiry</option>
+                            <option value="Signal Provenance">Signal Provenance</option>
+                            <option value="Sympatheia">Sympatheia</option>
                             <option value="Collaboration">Collaboration</option>
                             <option value="General">General</option>
                         </select>
@@ -66,7 +68,7 @@
         <section>
             <div class="container container--narrow" style="text-align:center;">
                 <p class="section-label">Direct</p>
-                <p class="section-desc">
+                <p class="section-desc" style="color: var(--muted); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
                     <a href="mailto:kyle@echology.io">kyle@echology.io</a><br>
                     <a href="https://github.com/echology-io">github.com/echology-io</a><br>
                     Charleston, South Carolina
@@ -79,8 +81,6 @@
                 <div class="copy">&copy; 2026 Kyle Vines</div>
                 <div class="footer-links">
                     <a href="https://echology.io">Echology</a>
-                    <a href="https://aecai.io">AECai</a>
-                    <a href="https://geode.digital">Geode</a>
                     <a href="https://github.com/echology-io">GitHub</a>
                     <a href="/contact">Contact</a>
                 </div>
@@ -98,13 +98,36 @@
         var email = f.email.value;
         var subject = f.subject.value;
         var message = f.message.value;
-        var body = 'Name: ' + name + '\n'
-            + 'Email: ' + email + '\n'
-            + 'Subject: ' + subject + '\n\n'
-            + message;
-        window.location.href = 'mailto:kyle@echology.io'
-            + '?subject=' + encodeURIComponent('[kylevines.com] ' + subject + ' — ' + name)
-            + '&body=' + encodeURIComponent(body);
+        var btn = f.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        if (window.plausible) {
+            plausible('Contact-Submit', {props: {product: subject}});
+        }
+        fetch('https://ops.echology.io/api/leads/inbound', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                interest: subject,
+                message: message,
+                source: 'kylevines.com'
+            })
+        }).then(function(r) { return r.json(); }).then(function(data) {
+            btn.textContent = 'Sent';
+            f.reset();
+            var msg = document.createElement('p');
+            msg.style.cssText = 'color: var(--accent); text-align: center; margin-top: 16px;';
+            msg.textContent = 'Message received. I will get back to you.';
+            f.parentNode.appendChild(msg);
+        }).catch(function() {
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+            window.location.href = 'mailto:kyle@echology.io'
+                + '?subject=' + encodeURIComponent('[kylevines.com] ' + subject + ' - ' + name)
+                + '&body=' + encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + message);
+        });
         return false;
     }
     function toggleMode() {
