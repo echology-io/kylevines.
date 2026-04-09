@@ -105,14 +105,23 @@
         <section style="padding: 80px 0 0;">
             <div class="container container--narrow" style="text-align:center;">
                 <p class="section-label">Live from ops.db</p>
-                <div id="revenue-ticker" style="margin: 32px 0 24px;">
-                    <div style="font-size: 64px; font-weight: 700; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; color: var(--accent); letter-spacing: -2px; line-height: 1;">
-                        $<span id="rev-amount">0</span>
+                <div style="display: flex; gap: 48px; justify-content: center; flex-wrap: wrap; margin: 32px 0 16px;">
+                    <div>
+                        <div style="font-size: 48px; font-weight: 700; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; color: var(--accent); letter-spacing: -2px; line-height: 1;">
+                            <span id="interest-provenance">0</span>
+                        </div>
+                        <div style="font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 1.5px; text-transform: uppercase;">Provenance</div>
                     </div>
-                    <div style="font-size: 13px; color: var(--muted); margin-top: 8px; letter-spacing: 1px; text-transform: uppercase;">revenue to date</div>
-                    <div style="font-size: 14px; color: var(--amber); margin-top: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
-                        Be the first to make it move.
+                    <div>
+                        <div style="font-size: 48px; font-weight: 700; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; color: var(--accent); letter-spacing: -2px; line-height: 1;">
+                            <span id="interest-sympatheia">0</span>
+                        </div>
+                        <div style="font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 1.5px; text-transform: uppercase;">Sympatheia</div>
                     </div>
+                </div>
+                <div style="font-size: 13px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase;">inbound interest</div>
+                <div style="font-size: 14px; color: var(--amber); margin-top: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+                    $<span id="rev-amount">0</span> revenue. Be the first to make it move.
                 </div>
                 <div id="live-stats" style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin-top: 32px;">
                     <div class="stat-cell">
@@ -182,6 +191,10 @@
         fetch('https://ops.echology.io/api/stats')
             .then(function(r) { return r.json(); })
             .then(function(d) {
+                var ip = document.getElementById('interest-provenance');
+                if (ip) ip.textContent = d.provenance_interest || '0';
+                var is2 = document.getElementById('interest-sympatheia');
+                if (is2) is2.textContent = d.sympatheia_interest || '0';
                 var rev = document.getElementById('rev-amount');
                 if (rev) rev.textContent = d.revenue ? d.revenue.toLocaleString() : '0';
                 var si = document.getElementById('stat-initiatives');
